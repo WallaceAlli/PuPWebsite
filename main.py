@@ -11,6 +11,10 @@ def login():
     return render_template('login.html', title ='LogIn',form = form)
     #form = form gives us access to this form instance we just made in that template
 
+@app.route("/home")
+def home():
+    return render_template('home.html')
+
 def register():
     form = RegistrationForm()
     return render_template('register.html', title ='Register',form = form)
