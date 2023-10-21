@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
-from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms.validators import DataRequired, Length, Email, EqualTo,ValidationError
+from main import mysql
+from main.Sql import *
 
 
 class RegistrationForm(FlaskForm):
@@ -16,6 +18,11 @@ class RegistrationForm(FlaskForm):
     # Requires the Confirm password section to be Equal to the Password Section
     submit = SubmitField('Sign Up')
     SchoolID = StringField('School ID', validators=[DataRequired()])
+    
+    def validate_username(self,username):
+        user =  SQL_query.check_username(mysql,username)
+        if user :
+            raise ValidationError('That User Name is taken. Please choose another username')
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators= [DataRequired(),Length(min =2 , max =20 )]) 
