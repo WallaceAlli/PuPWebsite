@@ -1,29 +1,32 @@
 from datetime import datetime
 
-def load_user(user_id):
-     return # the User ID from the Database
+
 
 class SQL_query:
+    #This is the Query that will run if they selected that they are a Faculty allowing me to differntiate between
+    # Parent and Teacher LogIns
     def Faculty_LogIn_query(mysql,form):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        query = "SELECT ParentId,username,password FROM `users` WHERE username = (%s)" 
+        query = "SELECT idfaculty,username,email,password,profile_pic FROM `faculty` WHERE username = (%s)" 
         mysql_cursor.execute(query,({form.username.data}))
         user_data = mysql_cursor.fetchone()
         mysql_cursor.close()
+        mysqlc.close()
         return user_data
     
     #Change this once tyler updates the SQL tables
     def Parent_LogIn_query(mysql,form):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        query = "SELECT ParentId,username,email,password FROM `users` WHERE username = (%s)" 
+        query = "SELECT ParentId,username,email,password,profile_pic FROM `users` WHERE username = (%s)" 
         mysql_cursor.execute(query,({form.username.data}))
         user_data = mysql_cursor.fetchone()
         mysql_cursor.close()
+        mysqlc.close()
         return user_data
     #change the query to query from the Guardian Info Table
-         
+    
     def check_username(mysql,username):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
@@ -31,21 +34,24 @@ class SQL_query:
         mysql_cursor.execute(query,({username.data}))
         user_data = mysql_cursor.fetchone()
         mysql_cursor.close()
+        mysqlc.close()
         return user_data
     
-         
+        #This is the Query that will be used when creating the Parents Account within the System
+        #Might have to change it to allow teachers to register but that doesnt matter rn
     def Register_query(mysql,form,hashed_pw):
-            mysqlc = mysql.connect
-            mysql_cursor = mysqlc.cursor()
-            query = "INSERT INTO users (username, email, password,schoolId) VALUES (%s, %s,%s,%s)"
-            mysql_cursor.execute(query,({form.username.data},{form.email.data},{hashed_pw},{form.SchoolID.data}))
-            mysqlc.commit()
-            #Added
-            query = "SELECT username, email, password FROM users WHERE username = (%s)" 
-            mysql_cursor.execute(query,({form.username.data}))
-            user_data = mysql_cursor.fetchone()
-            mysql_cursor.close()
-            return user_data
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        query = "INSERT INTO users (username, email, password,schoolId) VALUES (%s, %s,%s,%s)"
+        mysql_cursor.execute(query,({form.username.data},{form.email.data},{hashed_pw},{form.SchoolID.data}))
+        mysqlc.commit()
+        #Added
+        query = "SELECT username, email, password FROM users WHERE username = (%s)" 
+        mysql_cursor.execute(query,({form.username.data}))
+        user_data = mysql_cursor.fetchone()
+        mysql_cursor.close()
+        mysqlc.close()
+        return user_data
     
     def SingleQuery(mysql):
         mysqlc = mysql.connect
@@ -53,19 +59,55 @@ class SQL_query:
         mysql_cursor.execute("SELECT * FROM users")
         fetchdata = mysql_cursor.fetchone()
         mysql_cursor.close()
+        mysqlc.close()
         return fetchdata
     
-    def Load_user_id(mysql,form):
+    def Load_Parent_User_id(mysql,form):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        query = "SELECT ParentId,username,email,password FROM `users` WHERE ParentId = (%s)" 
+        query = "SELECT ParentId,username,email,password, profile_pic FROM `users` WHERE ParentId = (%s)" 
         mysql_cursor.execute(query,({form}))
         user_data = mysql_cursor.fetchone()
         mysql_cursor.close()
+        mysqlc.close()
         return user_data
-        
     
-         
+    # This was done so I could implement the Login Manager Package
+    # I needed to be able to work around not using SQL alchemy where it would implement the isactive for me
+    # So I was basically forced to call the User twice
+    def Load_Faculty_User_id(mysql,form):
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        query = "SELECT idfaculty,username,email,password FROM `faculty` WHERE idfaculty = (%s)" 
+        mysql_cursor.execute(query,({form}))
+        user_data = mysql_cursor.fetchone()
+        mysql_cursor.close()
+        mysqlc.close()
+        return user_data
     
+    def Update_Parent(mysql,form): 
+        mysqlc = mysql.connect
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        mysqlc.close()
+        #query = "UPDATE faculty set "
+         #finish this whenever u decide to make a update shit
+    
+    def update_profile_image(mysql,picture_file,User):
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        query = "UPDATE `users` SET `profile_pic` = (%s) WHERE `ParentId` =  (%s)"
+        mysql_cursor.execute(query,(picture_file,User.user_id))
+        # Do this when the things im using to query need to be different types
+        # Picture file is a string and user_id is an int
+        mysqlc.commit()
+        mysql_cursor.close()
+        mysqlc.close()
+
+
+
+    
+
         
+
 # For when I find a way to insert date into the Log, datetime.utcnow is what should be used

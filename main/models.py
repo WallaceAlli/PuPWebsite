@@ -6,22 +6,39 @@ from flask_login import UserMixin
 
 @login_manager.user_loader
 def load_user(user_id):
-    user_data = SQL_query.Load_user_id(mysql,int(user_id))
+    user_data = SQL_query.Load_Parent_User_id(mysql,int(user_id))
     if user_data:
-        user = User(user_data[0],user_data[1],user_data[2],user_data[3])
+        user = User(user_data[0],user_data[1],user_data[2],user_data[3],user_data[4])
+        user.setUsertype("Parent")
         return user
+    else:
+        user_data = SQL_query.Load_Faculty_User_id(mysql,int(user_id))
+        if user_data:
+            user = User(user_data[0],user_data[1],user_data[2],user_data[3])
+            user.setUsertype("Faculty")
+            return user
     return None
 
 class User(UserMixin):
-    def __init__(self, ParentId,username,email,password):
+    def __init__(self, ParentId,username,email,password,profile_pic):
         self.user_id = ParentId
         self.username = username
         self.email = email
         self.password = password
+        self.image_file = profile_pic
+
+    def setUsertype(self,Usertype):
+        self.Usertype = Usertype
+
+    def setSchoolId(self,schoolId):
+        self.schoolId = schoolId
+
+    def setChild(self,children):
+        self.children = children
 
     def get_id(self):
         return str(self.user_id)
     
+
     def is_active(self):
         return True
-

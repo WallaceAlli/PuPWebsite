@@ -1,12 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="split left">
-  <div class="centered">
     <div class="content-section">
         <form method = "POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class ="form-group">
-                <legend class ="border-bottom mb-4">LogIn</legend>
+                <legend class ="border-bottom mb-4">LogIn Maybe</legend>
                 <div class=""form-group>
                     {{ form.username.label(class="form-control-label") }}
                     {% if form.username.errors %}
@@ -59,11 +57,6 @@
                 <div class="form-check">
                     {{ form.remember(class="form-check-input") }}
                     {{ form.remember.label(class="form-check-label") }}
-                    
-                </div>
-                <div class ="form-check">
-                    {{ form.Usertype(class="form-check-input") }}
-                    {{ form.Usertype.label(class="form-check-label") }}
                 </div>
                 
 
@@ -74,21 +67,11 @@
             <small class="text-muted ml-2">
                 <a href="#">Forgot Password?</a>
             </small>
-            <br>
-            <small class="text-muted">
-                Need an Account? <a class="ml-2" href="{{ url_for('register') }}"> Register Today</a>
-            </small>
-            
         </form>
     </div>
-  </div>
-</div>
-
-<div class="split right">
-  <div class="centered">
-    
-    <h2>John Doe</h2>
-    <p>Some text here too.</p>
-  </div>
-</div>
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            Need an Account? <a class="ml-2" href="{{ url_for('register') }}"> Register Today</a>
+        </small>
+    </div>
 {% endblock content %}

@@ -1,10 +1,26 @@
 {% extends "layout.html" %}
 {% block content %}
+    <h1> Profile Page</h1>
+    <h1>{{ current_user.username }}</h1>
     <div class="content-section">
+        <h1> Profile Page</h1>
+        <button class="button button1">Parent LogIn</button> <button class="button button2">Faculty LogIn</button>
+
+        <div class ="content-section">
+            <h2> Hello</h2>
+        </div>
+    </div>
+
+  <script>
+    function showParentLoginForm() {
+      document.getElementById("content-box").innerHTML = `
+      <div class="content-section">
         <form method = "POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class ="form-group">
-                <legend class ="border-bottom mb-4">LogIn</legend>
+                <legend class ="border-bottom mb-4">
+                    <button class="button button1">Parent LogIn</button> <button class="button button2">Faculty LogIn</button>
+                </legend>
                 <div class=""form-group>
                     {{ form.username.label(class="form-control-label") }}
                     {% if form.username.errors %}
@@ -38,6 +54,7 @@
                     {{ form.email(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
+                
                 <div class=""form-group>
                     {{ form.password.label(class="form-control-label") }}
                     {% if form.password.errors %}
@@ -56,8 +73,12 @@
                 </div>
                 <div class="form-check">
                     {{ form.remember(class="form-check-input") }}
-                    {{ form.remember.label(class="form-check-label") }}
+                    {{ form.remember.label(class="form-check-label  ") }}
+                    <p>   <p>
+                    {{ form.Usertype(class="form-check-input") }}
+                    {{ form.Usertype.label(class="form-check-label") }}
                 </div>
+
                 
 
             </fieldset>
@@ -67,11 +88,51 @@
             <small class="text-muted ml-2">
                 <a href="#">Forgot Password?</a>
             </small>
+            <br>
+            <small class="text-muted">
+                Need an Account? <a class="ml-2" href="{{ url_for('register') }}"> Register Today</a>
+            </small>
+            
         </form>
     </div>
-    <div class="border-top pt-3">
-        <small class="text-muted">
-            Need an Account? <a class="ml-2" href="{{ url_for('register') }}"> Register Today</a>
-        </small>
-    </div>
+
+                `
+      ;
+    }
+
+    function showTeacherLoginForm() {
+      document.getElementById("content-box").innerHTML = `
+        <h2>Teacher Login</h2>
+        <form>
+          <label for="teacherUsername">Username:</label>
+          <input type="text" id="teacherUsername" name="teacherUsername"><br><br>
+          <label for="teacherPassword">Password:</label>
+          <input type="password" id="teacherPassword" name="teacherPassword"><br><br>
+          <button type="button" onclick="teacherLogin()">Login</button>
+        </form>
+      `;
+    }
+
+    function parentLogin() {
+      // Handle parent login logic here
+      alert("Parent Login Logic Placeholder");
+    }
+
+    function teacherLogin() {
+      // Handle teacher login logic here
+      alert("Teacher Login Logic Placeholder");
+    }
+  </script>
+
+<div class="content-section">
+<body onload='showParentLoginForm()'>
+  <button type="button" onclick="showParentLoginForm()">Parent Login</button>
+  <button type="button" onclick="showTeacherLoginForm()">Teacher Login</button>
+
+  <div id="content-box">
+    <!-- Content box will be populated based on the button clicked -->
+  </div>
+</body>
+</div>
+
 {% endblock content %}

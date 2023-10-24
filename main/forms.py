@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
+from flask_login import current_user
+from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
-from wtforms.validators import DataRequired, Length, Email, EqualTo,ValidationError
+from wtforms.validators import DataRequired, Length, Email, EqualTo,ValidationError, Optional
 from main import mysql
 from main.Sql import *
 
@@ -29,6 +31,22 @@ class LoginForm(FlaskForm):
     email = StringField('Email', validators= [DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired(),Length(min=8)])
     remember = BooleanField('Remember Me')
+    Usertype = BooleanField('If Staff')
     submit = SubmitField('Login')
+
+class UpdateAccountForm(FlaskForm):
+    username = StringField('Username', validators= [Optional(),Length(min =2 , max =20 )]) 
+    # 'Username' will be the name/label in html 
+    # Validators will be a list of guidelines we have for the username
+    email = StringField('Email', validators= [Optional(), Email()])
+    picture = FileField('Update Profile Picture', validators=[Optional(),FileAllowed(['jpg','png'])])
+    submit = SubmitField('Update')
+    driverlicense = StringField('Drivers License', validators=[Optional()])
+    
+    def validate_username(self,username):
+        if username.data != current_user.username:
+            user =  SQL_query.check_username(mysql,username)
+            if user :
+                raise ValidationError('That User Name is taken. Please choose another username')
 
 
