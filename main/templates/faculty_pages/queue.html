@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+{% if forms %}
+    <div class="content-section">
+        <p> Queue</p>
+        {% for form in forms %}
+            <div class="content-section">
+                <div class="media">
+                    <img class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + form.profile_pic) }}">
+                    <h2 class="account-heading">{{ form.username }}</h2>
+                    <p class="text-secondary">{{ form.email }}</p>
+                    
+                </div>
+                <p> Update </p>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p> No Hey </p>
+{% endif %}
+
+
+{% endblock content %}

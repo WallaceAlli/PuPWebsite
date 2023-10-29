@@ -57,7 +57,7 @@ class SQL_query:
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
         mysql_cursor.execute("SELECT * FROM users")
-        fetchdata = mysql_cursor.fetchone()
+        fetchdata = mysql_cursor.fetchall()
         mysql_cursor.close()
         mysqlc.close()
         return fetchdata
@@ -78,7 +78,7 @@ class SQL_query:
     def Load_Faculty_User_id(mysql,form):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        query = "SELECT idfaculty,username,email,password FROM `faculty` WHERE idfaculty = (%s)" 
+        query = "SELECT idfaculty,username,email,password, profile_pic  FROM `faculty` WHERE idfaculty = (%s)" 
         mysql_cursor.execute(query,({form}))
         user_data = mysql_cursor.fetchone()
         mysql_cursor.close()

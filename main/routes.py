@@ -14,7 +14,7 @@ import os
 def home():
     if current_user.is_authenticated:
         if current_user.Usertype == "Faculty":
-            return redirect(url_for('faculty'))
+            return redirect(url_for('profile'))
         else:
             return redirect(url_for('profile'))
     
@@ -27,7 +27,7 @@ def home():
                 login_user(user, remember=form.remember.data)
                 next_page = request.args.get('next')
                 flash(f'{user}','danger')
-                return redirect(next_page) if next_page else redirect(url_for('faculty'))
+                return redirect(next_page) if next_page else redirect(url_for('profile'))
             else:
                 flash(f'LogIn Unsuccessful. Please check username or password','danger')
         else:
@@ -70,9 +70,10 @@ def register():
 def profile():
     if current_user.Usertype == "Parent":
         image_file = url_for('static',filename ='profile_pics/' + current_user.image_file )
-        return render_template('parent_pages/profile.html',image_file= image_file)
+        return render_template('parent_pages/profile.html',title='Profile',image_file= image_file)
     elif current_user.Usertype == "Faculty":
-        return render_template('facultypage.html')
+        image_file = url_for('static',filename ='profile_pics/' + current_user.image_file )
+        return render_template('faculty_pages/faculty_profile.html',title ='Profile',image_file= image_file)
 
 
 
@@ -102,3 +103,10 @@ def update():
                 flash(f'{current_user.user_id}')
         return redirect(url_for('profile'))
     return render_template('parent_pages/update.html',title = 'updating', form = form)
+
+
+@app.route("/queue", methods=['GET','POST'])
+@app.route("/Queue", methods=['GET','POST'])
+def Queue():
+    form = SQL_query.SingleQuery(mysql)
+    return render_template("faculty_pages/queue.html",title='Queue',forms = form)

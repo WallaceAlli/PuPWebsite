@@ -14,7 +14,7 @@ def load_user(user_id):
     else:
         user_data = SQL_query.Load_Faculty_User_id(mysql,int(user_id))
         if user_data:
-            user = User(user_data[0],user_data[1],user_data[2],user_data[3])
+            user = User(user_data[0],user_data[1],user_data[2],user_data[3],user_data[4])
             user.setUsertype("Faculty")
             return user
     return None
