@@ -19,7 +19,7 @@ class SQL_query:
     def Parent_LogIn_query(mysql,form):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        query = "SELECT ParentId,username,email,password,profile_pic FROM `users` WHERE username = (%s)" 
+        query = "SELECT parentId,username,email,password,profile_pic FROM `users` WHERE username = (%s)" 
         mysql_cursor.execute(query,({form.username.data}))
         user_data = mysql_cursor.fetchone()
         mysql_cursor.close()
@@ -53,19 +53,12 @@ class SQL_query:
         mysqlc.close()
         return user_data
     
-    def SingleQuery(mysql):
-        mysqlc = mysql.connect
-        mysql_cursor = mysqlc.cursor()
-        mysql_cursor.execute("SELECT * FROM users")
-        fetchdata = mysql_cursor.fetchall()
-        mysql_cursor.close()
-        mysqlc.close()
-        return fetchdata
+
     
     def Load_Parent_User_id(mysql,form):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        query = "SELECT ParentId,username,email,password, profile_pic FROM `users` WHERE ParentId = (%s)" 
+        query = "SELECT parentId,username,email,password, profile_pic FROM `users` WHERE ParentId = (%s)" 
         mysql_cursor.execute(query,({form}))
         user_data = mysql_cursor.fetchone()
         mysql_cursor.close()
@@ -103,6 +96,16 @@ class SQL_query:
         mysqlc.commit()
         mysql_cursor.close()
         mysqlc.close()
+
+    def SingleQuery(mysql):
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        mysql_cursor.execute("SELECT * FROM users")
+        fetchdata = mysql_cursor.fetchall()
+        mysql_cursor.close()
+        mysqlc.close()
+        return fetchdata
+    
 
 
 

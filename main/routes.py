@@ -22,21 +22,20 @@ def home():
     if form.validate_on_submit():
         if form.Usertype.data:
             user_data = SQL_query.Faculty_LogIn_query(mysql,form)
-            if user_data and bcrypt.check_password_hash(user_data[3],form.password.data):
-                user = User(user_data[0],user_data[1],user_data[2],user_data[3],user_data[4])
+
+            if user_data and bcrypt.check_password_hash(user_data['password'],form.password.data):
+                user = User(user_data['idfaculty'],user_data['username'],user_data['email'],user_data['password'],user_data['profile_pic'])
                 login_user(user, remember=form.remember.data)
                 next_page = request.args.get('next')
-                flash(f'{user}','danger')
                 return redirect(next_page) if next_page else redirect(url_for('profile'))
             else:
                 flash(f'LogIn Unsuccessful. Please check username or password','danger')
         else:
             user_data = SQL_query.Parent_LogIn_query(mysql,form)
-            if user_data and bcrypt.check_password_hash(user_data[3],form.password.data):
-                user = User(user_data[0],user_data[1],user_data[2],user_data[3],user_data[4])
+            if user_data and bcrypt.check_password_hash(user_data['password'],form.password.data):
+                user = User(user_data['parentId'],user_data['username'],user_data['email'],user_data['password'],user_data['profile_pic'])
                 login_user(user, remember=form.remember.data)
                 next_page = request.args.get('next')
-                flash(f'{user}','danger')
                 return redirect(next_page) if next_page else redirect(url_for('profile'))
             else:
                 flash(f'LogIn Unsuccessful. Please check username or password','danger')
@@ -110,3 +109,7 @@ def update():
 def Queue():
     form = SQL_query.SingleQuery(mysql)
     return render_template("faculty_pages/queue.html",title='Queue',forms = form)
+
+app.route("/testing")
+def testing():
+    return render_template("testing.html")
