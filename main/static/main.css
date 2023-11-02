@@ -75,6 +75,12 @@ body {
     margin-right: 20px;
     margin-bottom: 16px;
   }
+
+  .logo {
+    max-width: 100px;
+  }
+
+  
   
   .account-heading {
     font-size: 2.5rem;
@@ -113,37 +119,57 @@ body {
   width: 150px;
   border-radius: 50%;
 }
-.button {
-  border: none;
-  color: white;
-  padding: 12px 10px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  transition-duration: 0.4s;
+
+/* Style for the button */
+#buttonImage {
   cursor: pointer;
 }
 
-.button1 {
-  background-color: white;
-  color: black;
-  border: 2px solid #000000;
+/* Dropdown container */
+.dropdown {
+  position: relative;
+  display: inline-block;
 }
 
-.button1:hover {
-  background-color: #000000;
-  color: white;
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
 }
 
-.button2 {
-  background-color: white;
-  color: black;
-  border: 2px solid #000000;
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
 }
 
-.button2:hover {
-  background-color: #000000;
-  color: white;
+
+/*This is for the scrolling on the Home Page*/
+.scrollable-textbox {
+  width: 300px; /* Set your desired width */
+  height: 200px; /* Set your desired height */
+  overflow-y: scroll; /* Enable vertical scrolling */
+  border: 1px solid #ccc; /* Add border for better visualization */
+}
+
+/* This if for the announcement and notification div boxes*/
+.custom-div {
+    width: 50%; /* 50% of the parent container's width */
+    height: 300px; /* 300 pixels in height */
+}
+
+/* This if for the Login Message div boxes*/
+.custom-div-login {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  width: 450px
+}
+.button-container {
+  display: inline-block;
 }

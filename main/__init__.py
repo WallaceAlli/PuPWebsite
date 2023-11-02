@@ -5,6 +5,7 @@ from flask_bcrypt import Bcrypt
 
 
 app = Flask(__name__)
+
 app.config['SECRET_KEY'] = 'd8c3f8a28b8b162bbee3fca47e8e0b74'
 app.config['MYSQL_HOST'] = '127.0.0.1' #Change this to Tylers IP address of his SQL
 app.config['MYSQL_USER'] = 'root'

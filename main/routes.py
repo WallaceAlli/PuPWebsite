@@ -9,9 +9,9 @@ from main.models import User
 import secrets
 import os
 
-@app.route("/home", methods=['GET','POST'])
-@app.route("/",methods=['GET','POST'])
-def home():
+@app.route("/Login", methods=['GET','POST'])
+@app.route("/login",methods=['GET','POST'])
+def login():
     if current_user.is_authenticated:
         if current_user.Usertype == "Faculty":
             return redirect(url_for('profile'))
@@ -27,7 +27,7 @@ def home():
                 user = User(user_data['idfaculty'],user_data['username'],user_data['email'],user_data['password'],user_data['profile_pic'])
                 login_user(user, remember=form.remember.data)
                 next_page = request.args.get('next')
-                return redirect(next_page) if next_page else redirect(url_for('profile'))
+                return redirect(next_page) if next_page else redirect(url_for('home'))
             else:
                 flash(f'LogIn Unsuccessful. Please check username or password','danger')
         else:
@@ -36,14 +36,22 @@ def home():
                 user = User(user_data['parentId'],user_data['username'],user_data['email'],user_data['password'],user_data['profile_pic'])
                 login_user(user, remember=form.remember.data)
                 next_page = request.args.get('next')
-                return redirect(next_page) if next_page else redirect(url_for('profile'))
+                return redirect(next_page) if next_page else redirect(url_for('home'))
             else:
                 flash(f'LogIn Unsuccessful. Please check username or password','danger')
-    return render_template('home.html', title ='login',form = form)
+    return render_template('login.html', title ='login',form = form)
     #The flash isnt working on the split screen so I cant send a error when they fail to log in
     # FIX THIS ITS VERY IMPORTANT AND SHOULD BE FIXED
     #form = form gives us access to this form instance we just made in that template
 
+@app.route("/home")
+@app.route("/")
+def home():
+    if  current_user.is_authenticated:
+        form = LoginForm()
+        return render_template('home.html', title='Home',form=form)
+    else:
+        return redirect(url_for('login'))
 
 @app.route("/register", methods=['GET','POST'])
 def register():
@@ -79,7 +87,7 @@ def profile():
 @app.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('login'))
 
 # Created for the Update App Route
 def save_picture(form_picture):
@@ -92,24 +100,42 @@ def save_picture(form_picture):
 
 
 @app.route("/update-parent-info", methods=['GET','POST'])
+@login_required
 def update():
     form = UpdateAccountForm()
     if form.validate_on_submit():
-        if form.picture.data:
-            picture_file = save_picture(form.picture.data)
-            SQL_query.update_profile_image(mysql,picture_file,current_user)
-            if isinstance(picture_file,str):
-                flash(f'{current_user.user_id}')
+        if form.profile_pic.data:
+            picture_file = save_picture(form.profile_pic.data)
+            SQL_query.update_profile(mysql,form.profile_pic.name,picture_file,current_user)
+        if form.username.data:
+            SQL_query.update_profile(mysql,form.username.name,form.username.data,current_user)
+        if form.email.data:
+            SQL_query.update_profile(mysql,form.email.name,form.email.data,current_user)            
         return redirect(url_for('profile'))
     return render_template('parent_pages/update.html',title = 'updating', form = form)
 
 
 @app.route("/queue", methods=['GET','POST'])
 @app.route("/Queue", methods=['GET','POST'])
+@login_required
 def Queue():
     form = SQL_query.SingleQuery(mysql)
     return render_template("faculty_pages/queue.html",title='Queue',forms = form)
 
-app.route("/testing")
+
+@app.route("/request")
+@app.route("/Request")
+@login_required
+def requestPickUp():
+    return render_template("parent_pages/request.html",title='Request')
+
+@app.route("/chat")
+@app.route("/Chat")
+@login_required
+def chat():
+    return render_template("faculty_pages/chat.html",title='Chat')
+
+@app.route("/testing")
 def testing():
-    return render_template("testing.html")
+    form = LoginForm()
+    return render_template("testing.html",title='testing',form=form)

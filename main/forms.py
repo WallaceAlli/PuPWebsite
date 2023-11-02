@@ -39,7 +39,7 @@ class UpdateAccountForm(FlaskForm):
     # 'Username' will be the name/label in html 
     # Validators will be a list of guidelines we have for the username
     email = StringField('Email', validators= [Optional(), Email()])
-    picture = FileField('Update Profile Picture', validators=[Optional(),FileAllowed(['jpg','png'])])
+    profile_pic = FileField('Update Profile Picture', validators=[Optional(),FileAllowed(['jpg','png'])])
     submit = SubmitField('Update')
     driverlicense = StringField('Drivers License', validators=[Optional()])
     

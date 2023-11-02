@@ -86,11 +86,11 @@ class SQL_query:
         #query = "UPDATE faculty set "
          #finish this whenever u decide to make a update shit
     
-    def update_profile_image(mysql,picture_file,User):
+    def update_profile(mysql,col_name,form,User):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        query = "UPDATE `users` SET `profile_pic` = (%s) WHERE `ParentId` =  (%s)"
-        mysql_cursor.execute(query,(picture_file,User.user_id))
+        query = "UPDATE `users` SET {} = (%s) WHERE `ParentId` =  (%s)".format(col_name)
+        mysql_cursor.execute(query,({form},User.user_id))
         # Do this when the things im using to query need to be different types
         # Picture file is a string and user_id is an int
         mysqlc.commit()
@@ -105,6 +105,8 @@ class SQL_query:
         mysql_cursor.close()
         mysqlc.close()
         return fetchdata
+    
+        
     
 
 
