@@ -1,22 +1,96 @@
-<!doctype html> 
-<html lang="en"> 
+{% extends "layout.html" %}
+{% block content %}
+<Body class="body">
+	<br>
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="content-section">
+				<button type="button" class="btn btn-primary  btn-block">Green</button>
+			</div>
+			<div class="content-section">
+				<button type="button" class="btn btn-primary btn-block">Yellow</button>
+			</div>
+			<div class="content-section">
+				<button type="button" class="btn btn-primary btn-block">Red   </button>
+			</div>
+			<div class="content-section">
+				<button type="button" class="btn btn-primary btn-block">Office</button>
+			</div>
+			<div class="content-section">
+				<button type="button" class="btn btn-primary btn-block">Line</button>
+			</div>
+			
+			
+		</div>
 
-<body class="m-2"> 
+
+		
+		<div class="col-sm-8 ">
+			<div class="row">
+
+					<div class="chat_scroll">
+						<p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.
+							The series follows the completion of the first Great Prophecy. The second Great Prophecy, later called the Prophecy of Seven is revealed in The Last Olympian. The Heroes of Olympus is the sequel series.
+						</p>
+					</div>
+					
+				
+
+			</div>
+			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+			<div>
+						<input type="text" id="inputField"  style="width:0%;height:50%"/>
+						
+						<button type="submit">Submit</button>
+					
+
+
+
+			</div>
+			
+		</div>
+		
+	</div>
+
+</Body>
 	
-	<nav class="navbar 
-				navbar-expand-lg 
-				navbar-light 
-				bg-light 
-				mt-3"> 
-	<div class="container"> 
-		<a class="navbar-brand" href="#"><img
-			src= 
-"https://media.geeksforgeeks.org/auth/profile/8ceu3jpotjla4m5wpbm7"
-			alt="" width="30"
-			height="30"></a> 
-		 
-	</div> 
-	</nav> 
+
+<style>
 	
-</body> 
-</html>
+	
+	.col-sm-2{
+		border: 1px solid #000;
+		padding: 10px; /* Optional: Add padding to columns for spacing */
+	}
+	.col-sm-8 {
+		border: 1px solid #000;
+		padding: 10px; /* Optional: Add padding to columns for spacing */
+	}
+	.col-sm-6 {
+		border: 1px solid #000;
+		padding: 10px; /* Optional: Add padding to columns for spacing */
+	}
+	.col-8 {
+		border: 1px solid #000;
+		padding: 10px; /* Optional: Add padding to columns for spacing */
+	}
+	.chatter{
+		flex:8;
+	}
+	.chat_scroll {
+		width: 95%; /* Set your desired width */
+		height: 80%; /* Set your desired height */
+		overflow-y: scroll; /* Enable vertical scrolling */
+		border: 1px solid #ccc; /* Add border for better visualization */
+		position: absolute;
+   		left: 3%;
+		border: 2px solid #000;
+	}
+
+
+</style>
+
+
+{% endblock content %}
+

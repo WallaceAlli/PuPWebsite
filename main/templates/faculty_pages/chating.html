@@ -1,0 +1,216 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <div class="container">
+        <div class="row" >
+            <div class="col-md-auto">
+                <div class="btn-group-vertical">
+                    <button type="submit" class="btn btn-primary" onclick="LoadDoc()">Green</button>
+                    <button class="btn btn-primary" type="submit"> Yellow   </button>
+                    <button class="btn btn-primary" type="submit"> Red   </button>
+                    <button class="btn btn-primary" type="submit"> Office   </button>
+                    <button class="btn btn-primary" type="submit"> Line  </button>
+                    <button class="btn btn-primary" type="submit"> SRO Officer   </button>
+
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="scrollable-text" id="teacher-chat">
+                    <!-- Content inside the scrollable text box goes here -->
+                    <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
+                    <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
+                    <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
+                    <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
+                    <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
+                    <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
+                    <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
+
+                    
+                    <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
+                </div>
+                <form method="POST" action="/submit">
+                    <div class="row">
+                        <div class="col-md-auto "style="border: none;">
+                            <img src="static/profile_pics/{{ current_user.image_file }}" alt="Avatar" class="avatar">            
+                        </div>
+                        <div class="col" style="border: none;" >
+                            <textarea id="user-input" name="userInput"></textarea>
+                        </div>
+                        <!-- Content inside the scrollable text box goes here <input type="submit" value="Submit"> -->
+                    </div>
+                </form>
+
+            </div>
+        </div>
+      </div>
+
+      
+      <script>
+        current_page = Green;
+        function info() {
+            document.getElementById("teacher-chat").innerHTML =`
+            <p>Info Section</p>`;
+        }
+    
+        function LoadDoc(){
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET","/get_data",true);
+            xhttp.onreadystatechange =  function (){
+                if (xhttp.readyState == 4 && xhttp.status == 200){
+                    var responseData = JSON.parse(xhttp.responseText);
+                    var dataContainer = document.getElementById('teacher-chat');
+                    dataContainer.innerHTML = '';
+
+                    responseData.forEach(function(item){
+
+
+                        var itemDiv = document.createElement('div'); // Contains the Main Div
+                        itemDiv.classList.add('chatcontainer');
+                        
+                        if(item.username =='{{ current_user.username }}' ){
+                            itemDiv.classList.add('darker');
+                        }
+
+                        // Display the modified values in the div
+                        var imgElement = document.createElement('img');
+                        imgElement.src = 'static/profile_pics/'+item.profile_pic;
+                        imgElement.alt = 'Avatar';
+                        imgElement.classList.add('avatar');
+                        if(item.username =='{{ current_user.username }}' ){
+                            imgElement.classList.add('right');
+                        }
+
+                        var timeElement = document.createElement('span')
+                        var UserElement = document.createElement('span')
+
+                        if(item.username =='{{ current_user.username }}' ){
+                            timeElement.classList.add('time-left');
+                            UserElement.classList.add('time-right')
+                        }else{
+                            timeElement.classList.add('time-right');
+                            UserElement.classList.add('time-left')
+
+                        }
+                        UserElement.textContent = item.username;
+                        timeElement.textContent = '12:00';
+
+                        var textElement = document.createElement('p');
+                        textElement.textContent = item.chat ;
+
+
+                        itemDiv.appendChild(imgElement)
+                        itemDiv.appendChild(textElement)
+                        itemDiv.appendChild(timeElement)
+                        itemDiv.appendChild(UserElement)
+
+
+                        dataContainer.appendChild(itemDiv);
+                    });
+                }
+            };
+            xhttp.send()
+
+           ;
+        }
+        // Fetch data every 5 seconds (5000 milliseconds)
+        if(current_page == Green){
+            setInterval(LoadDoc, 5000);
+        }
+        setInterval(LoadDoc, 5000);
+        // Fetch data immediately when the page loads
+        //LoadDoc();
+        function Dark_B() {
+            document.getElementById("content-box").innerHTML =`
+            <p> Dark Button Section LEBRON JAMES IS THE GREATEST PLAYER OF ALL TIME AND IT ISNT CLOSE </p>`;
+        }
+    
+      </script>
+        
+    
+<style>
+        .chatcontainer {
+    border: 2px solid #dedede;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+    }
+
+    .darker {
+    border-color: #ccc;
+    background-color: #ddd;
+    }
+
+    .chatcontainer::after {
+    content: "";
+    clear: both;
+    display: table;
+    }
+
+    .chatcontainer img {
+    float: left;
+    max-width: 60px;
+    width: 100%;
+    margin-right: 20px;
+    border-radius: 50%;
+    }
+
+    .chatcontainer img.right {
+    float: right;
+    margin-left: 20px;
+    margin-right:0;
+    }
+
+    .time-right {
+    float: right;
+    color: #aaa;
+    }
+
+    .time-left {
+    float: left;
+    color: #999;
+    }
+
+    .col-sm-2{
+		border: 1px solid #000;
+		padding: 10px; /* Optional: Add padding to columns for spacing */
+	}
+
+    .col-md-auto{
+        border: 1px solid #000;
+        
+		padding: 10px; /* Optional: Add padding to columns for spacing */
+    }
+    .col{
+        border: 1px solid #000;
+        margin: auto;
+        margin-left: auto;
+        margin-right: auto;
+        width: 40vw;
+
+    }
+
+#user-input {
+    resize: none;
+    display: block;
+    width: 90%;
+    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 12pt;
+}
+
+.scrollable-text {
+  
+  overflow-y: scroll;
+  margin: auto;
+  max-height: 70vh;
+  border: 1px solid #000;
+}
+
+
+</style>
+
+{% endblock content %}
+

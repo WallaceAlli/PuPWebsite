@@ -106,6 +106,26 @@ class SQL_query:
         mysqlc.close()
         return fetchdata
     
+    def UpdateChat(mysql):
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        mysql_cursor.execute("select username,profile_pic,chat from teacher_chat, faculty where teacher_id = idfaculty")
+        fetchdata = mysql_cursor.fetchall()
+        mysql_cursor.close()
+        mysqlc.close()
+        return fetchdata
+    
+    def Store_Chat(mysql,user_id,chat,time,chattype):
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        query = "INSERT INTO teacher_chat (teacher_id, chat,time,chat_type) VALUES (%s, %s,%s)"
+        mysql_cursor.execute(query,(user_id,{chat},{time}))
+        mysqlc.commit()
+        mysql_cursor.close()
+        mysqlc.close()
+
+
+    
         
     
 

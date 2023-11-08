@@ -1,4 +1,4 @@
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request,jsonify
 from main import app, bcrypt, mysql
 # WHat ever I import/initialize in the init will have to be imported from main to other files if needed
 from main.forms import RegistrationForm,LoginForm, UpdateAccountForm
@@ -8,6 +8,13 @@ from flask_login import login_user, current_user, logout_user,login_required
 from main.models import User
 import secrets
 import os
+
+
+from datetime import datetime
+
+
+
+
 
 @app.route("/Login", methods=['GET','POST'])
 @app.route("/login",methods=['GET','POST'])
@@ -133,9 +140,28 @@ def requestPickUp():
 @app.route("/Chat")
 @login_required
 def chat():
-    return render_template("faculty_pages/chat.html",title='Chat')
+    form= SQL_query.UpdateChat(mysql)
+    return render_template("faculty_pages/chating.html",title='Chat',forms=form)
 
 @app.route("/testing")
 def testing():
     form = LoginForm()
     return render_template("testing.html",title='testing',form=form)
+
+@app.route('/submit',methods=['GET','POST'])
+def submit():
+    text = request.form['userInput']
+    time = datetime.now()
+    date = time.strftime("%Y-%m-%d %I:%M %p")
+    
+    teacher_id = current_user.user_id
+    SQL_query.Store_Chat(mysql,teacher_id,text,date)
+    return f"Hello: {text}"
+
+@app.route("/get_data",methods=['GET','POST'])
+def get_data():
+    form = SQL_query.UpdateChat(mysql)
+    return jsonify(form)
+
+
+

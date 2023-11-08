@@ -95,6 +95,12 @@ body {
     overflow-x: hidden;
     padding-top: 20px;
   }
+  .avatar {
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
   
   .left {
     left: 0;
@@ -159,17 +165,4 @@ body {
 .custom-div {
     width: 50%; /* 50% of the parent container's width */
     height: 300px; /* 300 pixels in height */
-}
-
-/* This if for the Login Message div boxes*/
-.custom-div-login {
-  background: #ffffff;
-  padding: 10px 20px;
-  border: 1px solid #dddddd;
-  border-radius: 3px;
-  margin-bottom: 20px;
-  width: 450px
-}
-.button-container {
-  display: inline-block;
 }
