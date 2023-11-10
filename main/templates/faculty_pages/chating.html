@@ -5,12 +5,11 @@
         <div class="row" >
             <div class="col-md-auto">
                 <div class="btn-group-vertical">
-                    <button type="submit" class="btn btn-primary" onclick="LoadDoc()">Green</button>
-                    <button class="btn btn-primary" type="submit"> Yellow   </button>
-                    <button class="btn btn-primary" type="submit"> Red   </button>
-                    <button class="btn btn-primary" type="submit"> Office   </button>
-                    <button class="btn btn-primary" type="submit"> Line  </button>
-                    <button class="btn btn-primary" type="submit"> SRO Officer   </button>
+                    <button type="button" class="btn btn-primary" onclick="Updatecontent('Teacher')" >Teacher</button>
+                    <button class="btn btn-primary" type="submit" onclick="Updatecontent('Red')"> Red   </button>
+                    <button class="btn btn-primary" type="submit"onclick="Updatecontent('Office')"> Office   </button>
+                    <button class="btn btn-primary" type="submit"onclick="Updatecontent('Line')"> Line  </button>
+                    <button class="btn btn-primary" type="submit"onclick="Updatecontent('SRO Officer')"> SRO Officer   </button>
 
                 </div>
             </div>
@@ -19,17 +18,10 @@
                 <div class="scrollable-text" id="teacher-chat">
                     <!-- Content inside the scrollable text box goes here -->
                     <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
-                    <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
-                    <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
-                    <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
-                    <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
-                    <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
-                    <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
 
-                    
                     <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
                 </div>
-                <form method="POST" action="/submit">
+                <form id="myform" method="POST" action="/submit">
                     <div class="row">
                         <div class="col-md-auto "style="border: none;">
                             <img src="static/profile_pics/{{ current_user.image_file }}" alt="Avatar" class="avatar">            
@@ -37,7 +29,9 @@
                         <div class="col" style="border: none;" >
                             <textarea id="user-input" name="userInput"></textarea>
                         </div>
-                        <!-- Content inside the scrollable text box goes here <input type="submit" value="Submit"> -->
+                        <div style="margin: auto;">
+                            <input id="submit" type="submit" value="Submit">
+                        </div>
                     </div>
                 </form>
 
@@ -47,13 +41,63 @@
 
       
       <script>
-        current_page = Green;
-        function info() {
-            document.getElementById("teacher-chat").innerHTML =`
-            <p>Info Section</p>`;
+        
+        let currentButton = 'Teacher';
+        function updateScroll(){
+            var element = document.getElementById("teacher-chat");
+            element.scrollTop = element.scrollHeight;
         }
+
+
+        function Updatecontent(button){
+            currentButton = button;
+            if(button == 'Teacher'){
+                currentButton = 'Teacher';
+            }else if(button == 'Officer'){
+                currentButton == 'Officer';
+            }else if(button == 'Line'){
+                currentButton = 'Line';
+            } else if (button == 'Red'){
+                currentButton = 'Red';
+            }
+        };
+
+        const form = document.getElementById('myform');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'additionalValue';
+            hiddenInput.value = currentButton;
+            form.append(hiddenInput)
+
+            const formData = new FormData(form)
+            // Send a POST request using Fetch API
+            fetch('/submit', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())  // Parse response as text
+            .then(data => {
+                // Update the result div with the response data
+                document.getElementById('user-input').value = '';
+
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        document.getElementById("user-input").addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                // Trigger the submit button click event when Enter key is pressed
+                document.getElementById("submit").click();
+            }
+            });
     
         function LoadDoc(){
+
             var xhttp = new XMLHttpRequest();
             xhttp.open("GET","/get_data",true);
             xhttp.onreadystatechange =  function (){
@@ -63,7 +107,7 @@
                     dataContainer.innerHTML = '';
 
                     responseData.forEach(function(item){
-
+                        if(currentButton == item.type){
 
                         var itemDiv = document.createElement('div'); // Contains the Main Div
                         itemDiv.classList.add('chatcontainer');
@@ -83,29 +127,39 @@
 
                         var timeElement = document.createElement('span')
                         var UserElement = document.createElement('span')
+                        var DateElement = document.createElement('span')
 
                         if(item.username =='{{ current_user.username }}' ){
                             timeElement.classList.add('time-left');
-                            UserElement.classList.add('time-right')
+                            DateElement.classList.add('time-left');
+                            UserElement.classList.add('time-right');
                         }else{
                             timeElement.classList.add('time-right');
-                            UserElement.classList.add('time-left')
-
+                            DateElement.classList.add('time-right');
+                            UserElement.classList.add('time-left');
                         }
+
                         UserElement.textContent = item.username;
-                        timeElement.textContent = '12:00';
+
+
+                        timeElement.textContent = "  "+ item.time;
+
+                        DateElement.textContent = item.date+"    ";
 
                         var textElement = document.createElement('p');
                         textElement.textContent = item.chat ;
 
+                        itemDiv.appendChild(imgElement);
+                        itemDiv.appendChild(textElement);
+                        //itemDiv.appendChild(DateElement) change it to where if its the current day, it shows just the time, diff day than just show the date element
+                        itemDiv.appendChild(timeElement);
 
-                        itemDiv.appendChild(imgElement)
-                        itemDiv.appendChild(textElement)
-                        itemDiv.appendChild(timeElement)
-                        itemDiv.appendChild(UserElement)
-
+                        itemDiv.appendChild(UserElement);
+                        
 
                         dataContainer.appendChild(itemDiv);
+                    }
+
                     });
                 }
             };
@@ -114,17 +168,13 @@
            ;
         }
         // Fetch data every 5 seconds (5000 milliseconds)
-        if(current_page == Green){
-            setInterval(LoadDoc, 5000);
-        }
-        setInterval(LoadDoc, 5000);
+
         // Fetch data immediately when the page loads
-        //LoadDoc();
-        function Dark_B() {
-            document.getElementById("content-box").innerHTML =`
-            <p> Dark Button Section LEBRON JAMES IS THE GREATEST PLAYER OF ALL TIME AND IT ISNT CLOSE </p>`;
-        }
-    
+        LoadDoc();
+
+        setInterval(LoadDoc, 1000);
+        //setInterval(updateScroll, 3000); Maybe Implement Later
+
       </script>
         
     
@@ -133,14 +183,15 @@
     border: 2px solid #dedede;
     background-color: #f1f1f1;
     border-radius: 5px;
-    padding: 10px;
-    margin: 10px 0;
+    padding: 0px;
+    margin: 5px 0;
     }
 
     .darker {
     border-color: #ccc;
     background-color: #ddd;
     }
+    
 
     .chatcontainer::after {
     content: "";
@@ -206,9 +257,10 @@
   overflow-y: scroll;
   margin: auto;
   max-height: 70vh;
+  height: 70vh;
   border: 1px solid #000;
+  
 }
-
 
 </style>
 

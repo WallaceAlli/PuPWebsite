@@ -2,7 +2,6 @@ from flask import Flask
 from flask_mysqldb import MySQL
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
-
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'd8c3f8a28b8b162bbee3fca47e8e0b74'

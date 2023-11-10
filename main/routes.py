@@ -151,11 +151,12 @@ def testing():
 @app.route('/submit',methods=['GET','POST'])
 def submit():
     text = request.form['userInput']
-    time = datetime.now()
-    date = time.strftime("%Y-%m-%d %I:%M %p")
-    
+    type = request.form['additionalValue']
+    date_time = datetime.now()
+    date = date_time.strftime("%Y-%m-%d")
+    time = date_time.strftime("%I:%M %p")
     teacher_id = current_user.user_id
-    SQL_query.Store_Chat(mysql,teacher_id,text,date)
+    SQL_query.Store_Chat(mysql,teacher_id,text,date,time,type)
     return f"Hello: {text}"
 
 @app.route("/get_data",methods=['GET','POST'])
