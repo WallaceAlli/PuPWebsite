@@ -67,11 +67,13 @@ def register():
     
     form = RegistrationForm()
     if form.validate_on_submit():
+        driver_pic = save_Driver_License(form.driver_license_pic.data)
         hashed_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        #hashes the password to encrypt it
-        user = User(form.username.data,form.email.data,form.password.data)
-        user_data = SQL_query.Register_query(mysql,form,hashed_pw)
-        return redirect(url_for('profile'))
+
+        user_data = SQL_query.Register_query(mysql,form,hashed_pw,driver_pic)
+        return redirect(url_for('home'))
+    else:
+        flash(f'LogIn Unsuccessful. Please check username or password','danger')
     return render_template('register.html', title ='Register',form = form)
     #form = form gives us access to this form instance we just made in that template
 
@@ -102,6 +104,14 @@ def save_picture(form_picture):
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(app.root_path, 'static/profile_pics',picture_fn)
+    form_picture.save(picture_path)
+    return picture_fn
+
+def save_Driver_License(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, 'static/driver_license',picture_fn)
     form_picture.save(picture_path)
     return picture_fn
 

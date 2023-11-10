@@ -39,11 +39,11 @@ class SQL_query:
     
         #This is the Query that will be used when creating the Parents Account within the System
         #Might have to change it to allow teachers to register but that doesnt matter rn
-    def Register_query(mysql,form,hashed_pw):
+    def Register_query(mysql,form,hashed_pw,driver_pic):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        query = "INSERT INTO users (username, email, password,schoolId) VALUES (%s, %s,%s,%s)"
-        mysql_cursor.execute(query,({form.username.data},{form.email.data},{hashed_pw},{form.SchoolID.data}))
+        query = "INSERT INTO users (username, email, password,profile_pic,driver_license_num,driver_license_pic,PhoneNum, parentFName, parentLName) VALUES (%s, %s,%s,%s,%s,%s,%s,%s,%s)" 
+        mysql_cursor.execute(query,({form.username.data},{form.email.data},{hashed_pw},{"default.jpg"},{form.driver_license_num.data},{driver_pic},{form.PhoneNum.data},{form.parentFName.data},{form.parentLName.data}))
         mysqlc.commit()
         #Added
         query = "SELECT username, email, password FROM users WHERE username = (%s)" 
