@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request,jsonify
 from main import app, bcrypt, mysql
 # WHat ever I import/initialize in the init will have to be imported from main to other files if needed
-from main.forms import RegistrationForm,LoginForm, UpdateAccountForm
+from main.forms import RegistrationForm,LoginForm, UpdateAccountForm, AddKidsForm,MultiPersonForm
 from main.Sql import *
 from main.models import User
 from flask_login import login_user, current_user, logout_user,login_required
@@ -69,13 +69,40 @@ def register():
     if form.validate_on_submit():
         driver_pic = save_Driver_License(form.driver_license_pic.data)
         hashed_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-
         user_data = SQL_query.Register_query(mysql,form,hashed_pw,driver_pic)
-        return redirect(url_for('home'))
-    else:
-        flash(f'LogIn Unsuccessful. Please check username or password','danger')
+
+        user = User(user_data['parentId'],user_data['username'],user_data['email'],user_data['password'],user_data['profile_pic'])
+        login_user(user)
+        next_page = request.args.get('next')
+        return redirect(next_page) if next_page else redirect(url_for('home'))
+
     return render_template('register.html', title ='Register',form = form)
     #form = form gives us access to this form instance we just made in that template
+
+
+@app.route("/add_more_info",methods=['GET','POST'])
+def addKids():
+    form = AddKidsForm()
+    if form.validate_on_submit():
+    # ADD SQL STUFF
+        # Process the form data, which is now a list of dictionaries
+
+        return redirect(url_for('profile'))
+    return render_template('register_2.html', form=form)
+
+
+
+@app.route("/add_more_info_2",methods=['GET','POST'])
+def addKids_helper():
+    return render_template('addkids_helper.html')
+
+
+
+
+
+
+
+
 
 
 
@@ -159,6 +186,7 @@ def testing():
     return render_template("testing.html",title='testing',form=form)
 
 @app.route('/submit',methods=['GET','POST'])
+@login_required
 def submit():
     text = request.form['userInput']
     type = request.form['additionalValue']
@@ -170,6 +198,7 @@ def submit():
     return f"Hello: {text}"
 
 @app.route("/get_data",methods=['GET','POST'])
+@login_required
 def get_data():
     form = SQL_query.UpdateChat(mysql)
     return jsonify(form)

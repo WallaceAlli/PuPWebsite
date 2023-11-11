@@ -46,7 +46,7 @@ class SQL_query:
         mysql_cursor.execute(query,({form.username.data},{form.email.data},{hashed_pw},{"default.jpg"},{form.driver_license_num.data},{driver_pic},{form.PhoneNum.data},{form.parentFName.data},{form.parentLName.data}))
         mysqlc.commit()
         #Added
-        query = "SELECT username, email, password FROM users WHERE username = (%s)" 
+        query = "SELECT * FROM users WHERE username = (%s)" 
         mysql_cursor.execute(query,({form.username.data}))
         user_data = mysql_cursor.fetchone()
         mysql_cursor.close()
