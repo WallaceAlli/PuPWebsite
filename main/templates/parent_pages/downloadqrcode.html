@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block content %}
+<body class="request">
+    <div class="content-section" >
+
+        <legend class ="border-bottom mb-4">
+            <span>
+            <h1>
+                Download Qr Code
+            </h1>
+
+            </span>
+                    
+        </legend>
+
+        <div class="container">
+
+            <div class="row" >                
+                <div class="col d-flex justify-content-center align-items-center">
+                    <dv id="Qrcode-section" class="content-section" >
+                        <img src="{{ qrcode(form,box_size=12) }}">`;
+                    </div> 
+                    <!---- Make the Student Names a Link tht redirects if clicked-->
+                </div>
+
+            </div>
+            <div class="d-flex justify-content-center align-items-center">
+                <a class="btn btn-outline-info" href="{{ url_for('requestPickUp') }}"style="color: black;border: 1px solid #000;">Back</a>
+                <form id="download" method="POST" action="{{ url_for('download') }}">
+                    <button type="submit" class="btn btn-outline-info" style="color: black;border: 1px solid #000;">Download </button>
+                </form>
+            </div> 
+            
+
+        </div>
+        <!-- FORM HERE -->
+    </div>
+
+</body>
+
+
+<style>
+  .request{
+
+      background: #fafafa;
+      color: #333333;
+      margin-top: 5rem;
+      width: 90vw;
+      height: 80vh;
+  }
+</style>
+
+
+{% endblock content %}
+
+

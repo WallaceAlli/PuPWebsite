@@ -17,9 +17,7 @@
             <div class="col">
                 <div class="scrollable-text" id="teacher-chat">
                     <!-- Content inside the scrollable text box goes here -->
-                    <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
 
-                    <p>Percy Jackson and the Olympians is the second series written by Rick Riordan, (the first being his Tres Navarres series for adult readers) and the predecessor of The Heroes of Olympus series. The series focuses on Greek mythology in the modern day.</p>
                 </div>
                 <form id="myform" method="POST" action="/submit">
                     <div class="row">
@@ -107,7 +105,7 @@
                     dataContainer.innerHTML = '';
 
                     responseData.forEach(function(item){
-                        if(currentButton == item.type){
+                        if(currentButton == item.messagelogType){
 
                         var itemDiv = document.createElement('div'); // Contains the Main Div
                         itemDiv.classList.add('chatcontainer');
@@ -118,10 +116,10 @@
 
                         // Display the modified values in the div
                         var imgElement = document.createElement('img');
-                        imgElement.src = 'static/profile_pics/'+item.profile_pic;
+                        imgElement.src = 'static/profile_pics/'+item.facultyPicture;
                         imgElement.alt = 'Avatar';
                         imgElement.classList.add('avatar');
-                        if(item.username =='{{ current_user.username }}' ){
+                        if(item.facultyUsername =='{{ current_user.username }}' ){
                             imgElement.classList.add('right');
                         }
 
@@ -129,7 +127,7 @@
                         var UserElement = document.createElement('span')
                         var DateElement = document.createElement('span')
 
-                        if(item.username =='{{ current_user.username }}' ){
+                        if(item.facultyUsername =='{{ current_user.username }}' ){
                             timeElement.classList.add('time-left');
                             DateElement.classList.add('time-left');
                             UserElement.classList.add('time-right');
@@ -139,15 +137,15 @@
                             UserElement.classList.add('time-left');
                         }
 
-                        UserElement.textContent = item.username;
+                        UserElement.textContent = item.facultyUsername;
 
 
-                        timeElement.textContent = "  "+ item.time;
+                        timeElement.textContent = "  "+ item.messagelogTime;
 
-                        DateElement.textContent = item.date+"    ";
+                        DateElement.textContent = item.messagelogDate+"    ";
 
                         var textElement = document.createElement('p');
-                        textElement.textContent = item.chat ;
+                        textElement.textContent = item.messageContent ;
 
                         itemDiv.appendChild(imgElement);
                         itemDiv.appendChild(textElement);

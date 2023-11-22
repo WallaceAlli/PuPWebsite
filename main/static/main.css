@@ -2,6 +2,7 @@ body {
     background: #fafafa;
     color: #333333;
     margin-top: 5rem;
+    
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -155,11 +156,14 @@ body {
 
 /*This is for the scrolling on the Home Page*/
 .scrollable-textbox {
-  width: 300px; /* Set your desired width */
-  height: 200px; /* Set your desired height */
-  overflow-y: scroll; /* Enable vertical scrolling */
-  border: 1px solid #ccc; /* Add border for better visualization */
+  overflow-y: scroll;
+  margin: auto;
+  max-height: 25vh;
+  height: 25vh;
+  width: 40vw;
+  border: 1px solid #000;
 }
+
 
 /* This if for the announcement and notification div boxes*/
 .custom-div {

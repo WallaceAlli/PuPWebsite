@@ -8,29 +8,21 @@ class SQL_query:
     def Faculty_LogIn_query(mysql,form):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        query = "SELECT idfaculty,username,email,password,profile_pic FROM `faculty` WHERE username = (%s)" 
+        query = "SELECT idFaculty,facultyUsername,facultyEmail,facultyPassword,facultyPicture,facultyFirstName,facultyLastName FROM `faculty` WHERE facultyUsername = (%s)" 
         mysql_cursor.execute(query,({form.username.data}))
         user_data = mysql_cursor.fetchone()
         mysql_cursor.close()
         mysqlc.close()
         return user_data
-    
+
     #Change this once tyler updates the SQL tables
-    def Parent_LogIn_query(mysql,form):
-        mysqlc = mysql.connect
-        mysql_cursor = mysqlc.cursor()
-        query = "SELECT parentId,username,email,password,profile_pic FROM `users` WHERE username = (%s)" 
-        mysql_cursor.execute(query,({form.username.data}))
-        user_data = mysql_cursor.fetchone()
-        mysql_cursor.close()
-        mysqlc.close()
-        return user_data
+    
     #change the query to query from the Guardian Info Table
     
     def check_username(mysql,username):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        query = "SELECT username FROM `users` WHERE username = (%s)" 
+        query = "SELECT guardianUsername FROM `guardians` WHERE guardianUsername = (%s)" 
         mysql_cursor.execute(query,({username.data}))
         user_data = mysql_cursor.fetchone()
         mysql_cursor.close()
@@ -42,11 +34,11 @@ class SQL_query:
     def Register_query(mysql,form,hashed_pw,driver_pic):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        query = "INSERT INTO users (username, email, password,profile_pic,driver_license_num,driver_license_pic,PhoneNum, parentFName, parentLName) VALUES (%s, %s,%s,%s,%s,%s,%s,%s,%s)" 
-        mysql_cursor.execute(query,({form.username.data},{form.email.data},{hashed_pw},{"default.jpg"},{form.driver_license_num.data},{driver_pic},{form.PhoneNum.data},{form.parentFName.data},{form.parentLName.data}))
+        query = "INSERT INTO guardians (guardianFirstName, guardianLastname,guardianPhoneNumber,guardianLP,guardianCar,guardianUsername,guardianPassword,guardianDLNumber,guardianProfile_Pic,guardianDLPicture,guardianEmail) VALUES (%s, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s)" 
+        mysql_cursor.execute(query,({form.parentFName.data},{form.parentLName.data},{form.PhoneNum.data},{form.LP.data},{form.car.data},{form.username.data},{hashed_pw},{form.driver_license_num.data},{"default.jpg"},{driver_pic},{form.email.data}))
         mysqlc.commit()
         #Added
-        query = "SELECT * FROM users WHERE username = (%s)" 
+        query = "SELECT * FROM guardians WHERE guardianUsername = (%s)" 
         mysql_cursor.execute(query,({form.username.data}))
         user_data = mysql_cursor.fetchone()
         mysql_cursor.close()
@@ -58,8 +50,18 @@ class SQL_query:
     def Load_Parent_User_id(mysql,form):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        query = "SELECT parentId,username,email,password, profile_pic FROM `users` WHERE ParentId = (%s)" 
+        query = "SELECT * FROM `guardians` WHERE idGuardian = (%s)"
         mysql_cursor.execute(query,({form}))
+        user_data = mysql_cursor.fetchone()
+        mysql_cursor.close()
+        mysqlc.close()
+        return user_data
+    
+    def Parent_LogIn_query(mysql,form):
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        query = "SELECT idGuardian,guardianUsername,guardianEmail,guardianPassword, guardianProfile_Pic,guardianPhoneNumber,guardianFirstName,guardianLastName,guardianLP,guardianDLNumber,guardianDLPicture FROM `guardians` WHERE guardianUsername = (%s)" 
+        mysql_cursor.execute(query,({form.username.data}))
         user_data = mysql_cursor.fetchone()
         mysql_cursor.close()
         mysqlc.close()
@@ -71,12 +73,13 @@ class SQL_query:
     def Load_Faculty_User_id(mysql,form):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        query = "SELECT idfaculty,username,email,password, profile_pic  FROM `faculty` WHERE idfaculty = (%s)" 
+        query = "SELECT idFaculty,facultyUsername,facultyEmail,facultyPassword, facultyPicture,facultyFirstName,facultyLastName  FROM `faculty` WHERE idFaculty = (%s)" 
         mysql_cursor.execute(query,({form}))
         user_data = mysql_cursor.fetchone()
         mysql_cursor.close()
         mysqlc.close()
         return user_data
+
     
     def Update_Parent(mysql,form): 
         mysqlc = mysql.connect
@@ -89,7 +92,7 @@ class SQL_query:
     def update_profile(mysql,col_name,form,User):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        query = "UPDATE `users` SET {} = (%s) WHERE `ParentId` =  (%s)".format(col_name)
+        query = "UPDATE `guardians` SET {} = (%s) WHERE `idGuardian` =  (%s)".format(col_name)
         mysql_cursor.execute(query,({form},User.user_id))
         # Do this when the things im using to query need to be different types
         # Picture file is a string and user_id is an int
@@ -100,7 +103,7 @@ class SQL_query:
     def SingleQuery(mysql):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        mysql_cursor.execute("SELECT * FROM users")
+        mysql_cursor.execute("SELECT * FROM guardians")
         fetchdata = mysql_cursor.fetchall()
         mysql_cursor.close()
         mysqlc.close()
@@ -109,7 +112,7 @@ class SQL_query:
     def UpdateChat(mysql):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        mysql_cursor.execute("select username,profile_pic,chat,time,date,type from teacher_chat, faculty where teacher_id = idfaculty")
+        mysql_cursor.execute("select facultyUsername,facultyPicture,messageContent,messagelogTime,messagelogDate,messagelogType from messagelog, faculty where idUser1 = idFaculty")
         fetchdata = mysql_cursor.fetchall()
         mysql_cursor.close()
         mysqlc.close()
@@ -118,7 +121,7 @@ class SQL_query:
     def Store_Chat(mysql,user_id,chat,date,time,type):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        query = "INSERT INTO teacher_chat (teacher_id, chat,date,time,type) VALUES (%s,%s, %s,%s,%s)"
+        query = "INSERT INTO messagelog (idUser1, messageContent,messagelogDate,messagelogTime,messagelogType) VALUES (%s,%s, %s,%s,%s)"
         mysql_cursor.execute(query,(user_id,{chat},{date},{time},{type}))
         mysqlc.commit()
         mysql_cursor.close()

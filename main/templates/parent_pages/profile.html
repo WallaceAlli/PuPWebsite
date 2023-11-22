@@ -1,16 +1,109 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="content-section">
-    <div class="media">
-      <img class="rounded-circle account-img" src="{{ image_file }}">
-      <div class="media-body">
-        <h2 class="account-heading">{{ current_user.username }}</h2>
-        <p class="text-secondary">{{ current_user.email }}</p>
+<body class="request">
+
+<div class="content-section" >
+  <legend class ="border-bottom mb-4">
+    <span>
+      <h1>
+        Parent-profile  
+        <img src="{{ image_file }}" alt="Avatar" class="avatar"> 
+      </h1>
+
+    </span>
+               
+
+  </legend>
+
+    
+    <div class="container">
+      <div class="row" >
+          <div class="col">
+            
+            <legend class ="border-bottom mb-1">
+              Name
+            </legend>
+            <p>{{ current_user.firstN }}  {{current_user.LastN}}</p>
+
+            <legend class ="border-bottom mb-1">
+              Current Address
+            </legend>
+            <p> 4713 Elm Point Drive Balch Springs TX 75180 </p>
+
+            <legend class ="border-bottom mb-1">
+              Car Model/License Plate
+            </legend>
+            <p> {{ current_user.car }} | {{ current_user.LP }} </p>
+
+            <legend class ="border-bottom mb-1">
+              Email
+            </legend>
+            <p> {{ current_user.email }} </p>
+            <legend class ="border-bottom mb-1">
+              Update
+            </legend>
+            <button></button>
+            <div style="display: flex;">
+              <a class="nav-item nav-link" href="{{ url_for('update') }}" style="color: black;border: 1px solid #000;">Update Parent Info</a>
+              <a class="nav-item nav-link" href="{{ url_for('addKids') }}" style="color: black;border: 1px solid #000;">Add Student</a>
+            </div>
+            
+              
+          </div>
+    
+          <div class="col">
+            <legend class ="border-bottom mb-1">
+              Related Students
+            </legend>
+            {% for student in students %}
+              <div class="content-section" id="{{ student }}">
+                student
+              </div>
+            {% endfor %}
+            <!---- Make the Student Names a Link tht redirects if clicked-->
+            <div class="content-section">
+              student
+            </div>
+            <legend class ="border-bottom mb-1">
+              Phone Number
+            </legend>
+            <p>{{ current_user.phone }}</p>
+            
+
+            
+
+          </div>
+          <div class="col">
+            <legend class ="border-bottom mb-1">
+              Driver License
+            </legend>
+              <img  src="main\static\driver_license\{{current_user.DLPic}}" style="height: 80%; width: 100%;">
+              <br>
+              
+              
+
+
+            
+          </div>
       </div>
     </div>
     <!-- FORM HERE -->
-    <a class="nav-item nav-link" href="{{ url_for('update') }}">Update Info</a>
         
   </div>
 
+</body>
+
+<style>
+  .request{
+
+      background: #fafafa;
+      color: #333333;
+      margin-top: 5rem;
+      width: 90vw;
+  }
+</style>
+
+
 {% endblock content %}
+
+

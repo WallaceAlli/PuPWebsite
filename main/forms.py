@@ -24,6 +24,8 @@ class RegistrationForm(FlaskForm):
     parentFName = StringField('First Name', validators= [DataRequired(),Length( max =30 )]) 
     parentLName = StringField('Last Name', validators= [DataRequired(),Length(max =30 )]) 
     PhoneNum = StringField('Phone Number', validators= [DataRequired(),Length(max =10 )]) 
+    LP = StringField('License Plate Number', validators= [DataRequired()])
+    car = StringField('Car Model', validators= [DataRequired()]) 
 
     
     def validate_username(self,username):
@@ -57,17 +59,44 @@ class UpdateAccountForm(FlaskForm):
 
 
 class PersonForm(FlaskForm):
-    first_name = StringField('First Name')
-    last_name = StringField('Last Name')
+    naming = StringField('Child Name',validators= [DataRequired(),Length(min =2 , max =20 )])
+    username = StringField('Username', validators= [DataRequired(),Length(min =2 , max =20 )]) 
+
+    pickup = BooleanField('Pick up')
 
 class MultiPersonForm(FlaskForm):
-    people = FieldList(FormField(PersonForm), min_entries=1)
+    children = FieldList(FormField(PersonForm), min_entries=1)
+    submit = SubmitField('Submit')
+
+
+
+
+
+
+
+
+
+
 
 class AddKidsForm(FlaskForm):
     studentN = StringField('Student First Name', validators= [DataRequired()]) 
     studentL = StringField('Student Last Name', validators= [DataRequired()])
     grade = StringField('Student Grade Level', validators= [DataRequired()])
     submit = SubmitField('Add Student')
+
+
+class EmailUser(FlaskForm):
+    email = StringField('Email', validators= [DataRequired(), Email()])
+    submit = SubmitField('Send Code')
+
+class VerifyCode(FlaskForm):
+    code = StringField('Email', validators= [DataRequired()])
+    submit = SubmitField('Verify')
+
+class QrCodeGenerator(FlaskForm):
+    Kids = BooleanField('Children')
+    download = SubmitField('Download')
+    submit = SubmitField('Generate')
 
 
 

@@ -177,6 +177,43 @@
                     {{ form.driver_license_num(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
+                <div class="form-group">
+                    {{ form.LP.label(class="form-control-label") }}
+                    {% if form.LP.errors %}
+                        {{ form.LP(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                                <span> 
+                                    {{ error }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    
+                    {% else %}
+                    {{ form.LP(class="form-control form-control-lg") }}
+                    {% endif %}
+
+                </div>
+                <div class="form-group">
+                    {{ form.car.label(class="form-control-label") }}
+                    {% if form.car.errors %}
+                        {{ form.car(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.car.errors %}
+                                <span> 
+                                    {{ error }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    
+                    {% else %}
+                    {{ form.car(class="form-control form-control-lg") }}
+                    {% endif %}
+
+                </div>
+                
+
+
 
             </fieldset>
             <div class="form-group">

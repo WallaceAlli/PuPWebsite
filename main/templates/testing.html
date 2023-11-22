@@ -1,85 +1,68 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="content-section">
-        <form method = "POST" action="" enctype="multipart/form-data">
-            {{ form.hidden_tag() }}
-            <fieldset class ="form-group">
-                <legend class ="border-bottom mb-4">
-                    Guardians Please Add Related Students
-                </legend>
-                <div class="form-group">
-                    {{ form.studentN.label(class="form-control-label") }}
-                    {% if form.studentN.errors %}
-                        {{ form.studentN(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.studentN.errors %}
-                                <span> 
-                                    {{ error }}
-                                </span>
-                            {% endfor %}
-                        </div>
-                    
-                    {% else %}
-                    {{ form.studentN(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
+<body class="request">
+<div class="content-section" >
+  <legend class ="border-bottom mb-4">
+    <span>
+      <h1>
+        Download Qr Code
+      </h1>
 
-                <div class="form-group">
-                    {{ form.studentL.label(class="form-control-label") }}
-                    {% if form.studentL.errors %}
-                        {{ form.studentL(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.studentL.errors %}
-                                <span> 
-                                    {{ error }}
-                                </span>
-                            {% endfor %}
-                        </div>
-                    
-                    {% else %}
-                    {{ form.studentL(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
+    </span>
+               
+  </legend>
 
-                <div class="form-group">
-                    {{ form.grade.label(class="form-control-label") }}
-                    {% if form.grade.errors %}
-                        {{ form.grade(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.grade.errors %}
-                                <span> 
-                                    {{ error }}
-                                </span>
-                            {% endfor %}
-                        </div>
-                    
-                    {% else %}
-                    {{ form.grade(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                
-                <div class="form-group">
-                    {{ form.grade.label(class="form-control-label") }}
-                    {% if form.grade.errors %}
-                        {{ form.grade(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.grade.errors %}
-                                <span> 
-                                    {{ error }}
-                                </span>
-                            {% endfor %}
-                        </div>
-                    
-                    {% else %}
-                    {{ form.grade(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                
-            </fieldset>
-            <div class="form-group">
-                {{ form.submit(class="btn btn-outline-info") }}
-            </div>
-        </form>
+    <div class="container">
+      <div class="row" >
+          <div class="col" style="border-right: 1px solid #000;">
+            <legend class ="border-bottom mb-1">
+              <h1>
+                KIDS BEING PICKED UP
+              </h1>
+            </legend>
+
+            <div class="d-flex justify-content-center align-items-center">
+                <a class="btn btn-outline-info" href="{{ url_for('requestPickUp') }}">Back</a>
+                <form id="download" method="POST" action="{{ url_for('download') }}">
+                    <button type="submit" class="btn btn-outline-info" style="color: black;border: 1px solid #000;">Download </button>
+                </form>
+            </div> 
+
+            
+          </div>
+          
+          <div class="col d-flex justify-content-center align-items-center">
+            <dv id="Qrcode-section" class="content-section" >
+                <img src="{{ qrcode(form,box_size=10) }}">`;
+
+
+            </div> 
+            <!---- Make the Student Names a Link tht redirects if clicked-->
+
+          </div>
+          
+          
+      </div>
+      
+   </div>
     </div>
-    
+    <!-- FORM HERE -->
+  </div>
+
+</body>
+
+
+<style>
+  .request{
+
+      background: #fafafa;
+      color: #333333;
+      margin-top: 5rem;
+      width: 80vw;
+  }
+</style>
+
+
 {% endblock content %}
+
+

@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section" >
+  <legend class ="border-bottom mb-4">
+    <span>
+      <h1>
+        Student-profile  
+      </h1>
+
+    </span>
+               
+
+  </legend>
+
+    
+    <div class="container">
+      <div class="row" >
+          <div class="col">
+            
+            <legend class ="border-bottom mb-1">
+              Student Name
+            </legend>
+            <p></p>
+
+            <legend class ="border-bottom mb-1">
+              Student Grade
+            </legend>
+            <p></p>
+
+            <legend class ="border-bottom mb-1">
+              Associated Guardian
+            </legend>
+            <p> </p>
+
+            <legend class ="border-bottom mb-1">
+              Student Address
+            </legend>
+            <p> </p>
+                        
+              
+          </div>
+    
+          <div class="col">
+            <legend class ="border-bottom mb-1">
+              White List Pick Up
+            </legend>
+            {% for parent in parents %}
+              <div class="content-section" id="{{ parent }}">
+                parent
+              </div>
+            {% endfor %}
+
+
+            <!---- Make the Student Names a Link tht redirects if clicked-->
+            <div class="content-section">
+              Parent
+            </div>
+            
+            
+
+            
+
+          </div>
+          <div class="col">
+            <legend class ="border-bottom mb-1">
+              Black List Pick Up
+            </legend>
+            <div class="content-section" style="height: 50%;">
+
+            </div>
+
+              
+              
+
+
+            <a class="nav-item nav-link" href="{{ url_for('update') }}" style="color: black;border: 1px solid #000;">Update Parent Info</a>
+
+          </div>
+          
+      </div>
+
+    </div>
+    <!-- FORM HERE -->
+        
+  </div>
+
+
+
+{% endblock content %}
+
+
