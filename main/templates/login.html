@@ -6,7 +6,7 @@
     <div class="content-section">
         <form method = "POST" action="">
             {{ form.hidden_tag() }}
-            <fieldset class ="form-group">
+            <fieldset class ="form-group" style="height: 60%;">
                 <legend class ="border-bottom mb-4">LogIn</legend>
                 <div class=""form-group>
                     {{ form.username.label(class="form-control-label") }}
@@ -91,14 +91,13 @@
         <body onload="info()">
         <h2>Welcome to Pick Up Pal</h2>
         <p>At Pick Up Pals, We hope to become your best friend</p>
-        <div class="d-flex justify-content-center">
-            <button type="button" class="btn btn-primary" onclick="info()">Info</button>
-            <button type="button" class="btn btn-light" onclick="Apps()">Apps</button>
-            <button type="button" class="btn btn-dark" onclick="Dark_B()">Dark Button</button>
-        </div>
+        
         
         <div class="scrollable-textbox" id="content-box">
-            
+            <h4>What is Pick Up Pal</h4>
+            Pick Up Pals (PUP) is an app that streamlines a school’s child pick-up systems by making the parent or guardian verification system more efficient and implementing safety and security protocols. PUP will save verification information of parents and guardians, such as driver’s licenses and car information, and ensures the ability to identify authorized parents and guardians.
+            <h4>Pick Up Pals Target Clients and Users</h4>
+            Our Target clients and users are schools and the parents associated with the schools as well. We will be providing the schools with the technology and helping them integrate the system within their current infastructure in order to allow a more efficent Pick Up Service. Through this manner, We hope that the after school experience and school parent interaction will be more concise.
         </div>
 
         </body>
@@ -111,21 +110,5 @@
   </div>
 </div>
 
-<script>
-    function info() {
-        document.getElementById("content-box").innerHTML =`
-        <p>Info Section</p>`;
-    }
 
-    function Apps() {
-        document.getElementById("content-box").innerHTML =`
-        <p> Apps Section </p>`;
-    }
-    
-    function Dark_B() {
-        document.getElementById("content-box").innerHTML =`
-        <p> Dark Button Section LEBRON JAMES IS THE GREATEST PLAYER OF ALL TIME AND IT ISNT CLOSE </p>`;
-    }
-
-  </script>
 {% endblock content %}

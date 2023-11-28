@@ -56,9 +56,11 @@
               Related Students
             </legend>
             {% for student in current_user.students %}
-              <div class="content-section" id="{{ student }}" style="cursor: pointer;" onclick="redirectToStudent('{{student.idStudent}}')">
+            <a href="{{ url_for('student_profile')}}" style="color: #000;" onclick="redirectToStudent('{{student.idStudent}}')">
+              <div class="content-section" id="{{ student }}">
                 <span>Grade: {{ student.studentGrade }} {{ student.studentFirstName }} {{ student.studentLastName }}</span>
               </div>
+            </a>
             {% endfor %}
             <!---- Make the Student Names a Link tht redirects if clicked-->
             

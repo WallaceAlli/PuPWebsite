@@ -5,15 +5,19 @@ from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from flask_qrcode import QRcode
 
-app = Flask(__name__)
 
+
+from flask_socketio import SocketIO,emit
+
+
+app = Flask(__name__)
+app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SECRET_KEY'] = 'd8c3f8a28b8b162bbee3fca47e8e0b74'
 app.config['MYSQL_HOST'] = 'pickuppal.crnfzjphbive.us-east-2.rds.amazonaws.com' #Change this to Tylers IP address of his SQL
 app.config['MYSQL_USER'] = 'admin'
 app.config['MYSQL_PASSWORD'] = 'pickuppal'
 app.config['MYSQL_DB'] = 'pupdatabase'
 app.config["MYSQL_CURSORCLASS"] = "DictCursor"
-
 #Mail Section
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 587  # Replace with your mail server port
@@ -30,6 +34,10 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 mail = Mail(app)
 qrcode = QRcode(app)
+
+
+socketio = SocketIO(app)
+
 #This is for the Qrcode that will be Shown on the HTML Page
 login_manager.login_view = 'home'
 login_manager.login_message_category = 'info'

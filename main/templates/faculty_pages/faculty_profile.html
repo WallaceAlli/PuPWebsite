@@ -1,18 +1,95 @@
 {% extends "layout.html" %}
 {% block content %}
-<Body>
-    <h1> Faculty Profile Page</h1>
-    <div class="content-section">
-        <div class="media">
-          <img class="rounded-circle account-img" src="{{ image_file }}">
-          <div class="media-body">
-            <h2 class="account-heading">{{ current_user.username }}</h2>
-            <p class="text-secondary">{{ current_user.email }}</p>
-          </div>
-        </div>
-        <!-- FORM HERE -->
-        <a class="nav-item nav-link" href="{{ url_for('update') }}">Update Info</a>
+<body class="request">
+
+<div class="content-section" >
+  <legend class ="border-bottom mb-4">
+    <span>
+      <h1>
+        Faculty-profile  
+        <img src="{{ image_file }}" alt="Avatar" class="avatar"> 
+      </h1>
+
+    </span>
+               
+
+  </legend>
+
+    
+    <div class="container">
+      <div class="row" >
+          <div class="col">
             
+            <legend class ="border-bottom mb-1">
+              Name
+            </legend>
+            <p>{{ current_user.firstN }}  {{current_user.LastN}}</p>
+            
+
+            <legend class ="border-bottom mb-1">
+              Email
+            </legend>
+            <p> {{ current_user.email }} </p>
+            
+            
+              
+          </div>
+    
+          <div class="col">
+            <legend class ="border-bottom mb-1">
+              Classes
+            </legend>
+            <div class="content-section">
+              Statistics
+            </div>
+            <div class="content-section">
+              Linear Algebra
+            </div>
+            <div class="content-section">
+              Calculus
+            </div>
+            <!---- Make the Student Names a Link tht redirects if clicked-->
+            
+            <legend class ="border-bottom mb-1">
+              Phone Number
+            </legend>
+            <p>806-310-8899</p>
+            
+
+            
+
+          </div>
+          <div class="col">
+            <legend class ="border-bottom mb-1">
+              Teacher ID 
+            </legend>
+              <img  src="static\profile_pics\profile.jpg" style="height: 60%; width: 100%;">
+              <br>
+              
+              
+
+
+            
+          </div>
       </div>
-    </Body>
+    </div>
+    <!-- FORM HERE -->
+        
+  </div>
+
+</body>
+
+<style>
+  .request{
+
+      background: #fafafa;
+      color: #333333;
+      margin-top: 5rem;
+      width: 90vw;
+  }
+</style>
+
+
 {% endblock content %}
+
+

@@ -26,8 +26,6 @@ class RegistrationForm(FlaskForm):
     PhoneNum = StringField('Phone Number', validators= [DataRequired(),Length(max =10 )]) 
     LP = StringField('License Plate Number', validators= [DataRequired()])
     car = StringField('Car Model', validators= [DataRequired()]) 
-
-    
     def validate_username(self,username):
         user =  SQL_query.check_username(mysql,username)
         if user :
@@ -49,7 +47,10 @@ class UpdateAccountForm(FlaskForm):
     profile_pic = FileField('Update Profile Picture', validators=[Optional(),FileAllowed(['jpg','png'])])
     submit = SubmitField('Update')
     driverlicense = StringField('Drivers License', validators=[Optional()])
-    
+    PhoneNum = StringField('Phone Number', validators= [Length(max =10),Optional()]) 
+    driver_license_pic = FileField('Upload Drivers License', validators=[Optional(),FileAllowed(['jpg','png'])])
+    LP = StringField('License Plate Number', validators= [Optional()])
+    car = StringField('Car Model', validators= [Optional()]) 
     def validate_username(self,username):
         if username.data != current_user.username:
             user =  SQL_query.check_username(mysql,username)
@@ -83,6 +84,21 @@ class AddKidsForm(FlaskForm):
     studentL = StringField('Student Last Name', validators= [DataRequired()])
     grade = StringField('Student Grade Level', validators= [DataRequired()])
     submit = SubmitField('Add Student')
+    address = StringField('Student Primary Address',validators=[DataRequired()])
+    def validate_studentN(self,studentN):
+        user = SQL_query.check_studentN(mysql,studentN)
+        print(user)
+        if user :
+            raise ValidationError('Student Already Exists')
+class PickUpList(FlaskForm):
+    LastName = StringField('Adult First Name', validators= [DataRequired()]) 
+    FirstName = StringField('Adult Last Name', validators= [DataRequired()])
+    Type = StringField('Type Black for Black List or White for White List', validators=[DataRequired()])
+    def validate_Type(self, color_field):
+        allowed_colors = ["Black", "White"]  # Define the allowed colors
+        if color_field.data not in allowed_colors:
+            raise ValidationError(f"Black or White")
+    submit = SubmitField('Submit')    
 
 
 class EmailUser(FlaskForm):
@@ -90,7 +106,7 @@ class EmailUser(FlaskForm):
     submit = SubmitField('Send Code')
 
 class VerifyCode(FlaskForm):
-    code = StringField('Email', validators= [DataRequired()])
+    code = StringField('Code', validators= [DataRequired()])
     submit = SubmitField('Verify')
 
 class QrCodeGenerator(FlaskForm):

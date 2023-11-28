@@ -4,12 +4,12 @@
     <div class="container">
         <div class="row" >
             <div class="col-md-auto">
-                <div class="btn-group-vertical">
-                    <button type="button" class="btn btn-primary" onclick="Updatecontent('Teacher')" >Teacher</button>
-                    <button class="btn btn-primary" type="submit" onclick="Updatecontent('Red')"> Red   </button>
-                    <button class="btn btn-primary" type="submit"onclick="Updatecontent('Office')"> Office   </button>
-                    <button class="btn btn-primary" type="submit"onclick="Updatecontent('Line')"> Line  </button>
-                    <button class="btn btn-primary" type="submit"onclick="Updatecontent('SRO Officer')"> SRO Officer   </button>
+                <div class="btn-group-vertical" style="height: 90%;">
+                    <button type="button" class="btn btn-primary" style="background-color: black;" onclick="Updatecontent('Teacher')" >Teacher</button>
+                    <button class="btn btn-primary" style="background-color: black;" type="submit" onclick="Updatecontent('Red')"> Red   </button>
+                    <button class="btn btn-primary" style="background-color: black;" type="submit"onclick="Updatecontent('Office')"> Office   </button>
+                    <button class="btn btn-primary" style="background-color: black;" type="submit"onclick="Updatecontent('Line')"> Line  </button>
+                    <button class="btn btn-primary" style="background-color: black;" type="submit"onclick="Updatecontent('SRO Officer')"> SRO Officer   </button>
 
                 </div>
             </div>
@@ -57,6 +57,8 @@
                 currentButton = 'Line';
             } else if (button == 'Red'){
                 currentButton = 'Red';
+            } else if (button == 'SRO Officer'){
+                currentButton = 'SRO Officer'
             }
         };
 
@@ -110,18 +112,12 @@
                         var itemDiv = document.createElement('div'); // Contains the Main Div
                         itemDiv.classList.add('chatcontainer');
                         
-                        if(item.username =='{{ current_user.username }}' ){
+                        if(item.facultyUsername =='{{ current_user.username }}' ){
                             itemDiv.classList.add('darker');
                         }
 
                         // Display the modified values in the div
-                        var imgElement = document.createElement('img');
-                        imgElement.src = 'static/profile_pics/'+item.facultyPicture;
-                        imgElement.alt = 'Avatar';
-                        imgElement.classList.add('avatar');
-                        if(item.facultyUsername =='{{ current_user.username }}' ){
-                            imgElement.classList.add('right');
-                        }
+                        
 
                         var timeElement = document.createElement('span')
                         var UserElement = document.createElement('span')
@@ -147,7 +143,6 @@
                         var textElement = document.createElement('p');
                         textElement.textContent = item.messageContent ;
 
-                        itemDiv.appendChild(imgElement);
                         itemDiv.appendChild(textElement);
                         //itemDiv.appendChild(DateElement) change it to where if its the current day, it shows just the time, diff day than just show the date element
                         itemDiv.appendChild(timeElement);
@@ -170,7 +165,7 @@
         // Fetch data immediately when the page loads
         LoadDoc();
 
-        setInterval(LoadDoc, 1000);
+        setInterval(LoadDoc, 2000);
         //setInterval(updateScroll, 3000); Maybe Implement Later
 
       </script>
@@ -257,7 +252,6 @@
   max-height: 70vh;
   height: 70vh;
   border: 1px solid #000;
-  
 }
 
 </style>

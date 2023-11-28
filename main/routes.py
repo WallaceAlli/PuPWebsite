@@ -1,12 +1,13 @@
 from flask import render_template, url_for, flash, redirect, request,jsonify,session,send_file
 from flask_mail import Message
-from main import app, bcrypt, mysql,mail
+from main import app, bcrypt, mysql,mail, socketio,emit
 import qrcode #This is for the Qrcode that will be downloaded
-import boto3
 from io import BytesIO
 
+import base64
+
 # WHat ever I import/initialize in the init will have to be imported from main to other files if needed
-from main.forms import RegistrationForm,LoginForm, UpdateAccountForm, AddKidsForm,EmailUser,VerifyCode, QrCodeGenerator,MultiPersonForm
+from main.forms import RegistrationForm,LoginForm, UpdateAccountForm, AddKidsForm,EmailUser,VerifyCode, QrCodeGenerator,MultiPersonForm,PickUpList
 from main.Sql import *
 from main.models import User
 from flask_login import login_user, current_user, logout_user,login_required
@@ -36,7 +37,6 @@ def login():
                 session['user'] = user_data
                 session['remember'] = form.remember.data
                 return redirect(url_for('send_verification_code'))
-                
             else:
                 flash(f'LogIn Unsuccessful. Please check username or password','danger')
         else:
@@ -88,8 +88,10 @@ def register():
 def addKids():
     form = AddKidsForm()
     if form.validate_on_submit():
-    # ADD SQL STUFF
-        # Process the form data, which is now a list of dictionaries
+        SQL_query.InsertStudent(mysql,form.studentN.data,form.studentL.data,form.grade.data,form.address.data)
+        student_id = SQL_query.StudentView(mysql,form.studentN.data)
+        SQL_query.InsertView(mysql,current_user.user_id,student_id['idStudent'])
+
         return redirect(url_for('profile'))
     return render_template('AddKids.html', form=form)
 
@@ -99,15 +101,29 @@ def addKids():
 @login_required
 def profile():
     if current_user.Usertype == "Parent":
-        image_file = url_for('static',filename ='profile_pics/' + current_user.image_file )
+        image_file = url_for('static',filename ='profile_pics/profile.jpg' )
+        
         return render_template('parent_pages/profile.html',title='Profile',image_file= image_file)
     elif current_user.Usertype == "Faculty":
-        image_file = url_for('static',filename ='profile_pics/' + current_user.image_file )
+        image_file = url_for('static',filename ='profile_pics/profile.jpg' )
         return render_template('faculty_pages/faculty_profile.html',title ='Profile',image_file= image_file)
 
-@app.route("/student-profile", methods=['GET','POST'])
-def student_profile():
-    return render_template('parent_pages/student_profile.html',title='Student Profile')
+@app.route("/student/<student_id>", methods=['GET','POST'])
+def student_profile(student_id):
+    student_info = SQL_query.grabstudentinfo(mysql,student_id)
+    pickupinfo= SQL_query.grabList(mysql,student_id)
+    white = pickupinfo[0]
+    black = pickupinfo[1]
+    return render_template('parent_pages/student_profile.html',title='Student Profile',form = student_info,white = white,black=black)
+
+@app.route("/add-to-list/<student_id>",methods=['GET','POST'])
+def AddList(student_id):
+    form = PickUpList()
+    if form.validate_on_submit():
+        SQL_query.pickuplist(mysql,student_id,form)
+        return redirect(url_for('profile'))
+    return render_template('parent_pages/addlist.html',title='White or Black List',form = form)
+
 
 @app.route("/logout")
 def logout():
@@ -121,32 +137,42 @@ def update():
     form = UpdateAccountForm()
     if form.validate_on_submit():
         if form.profile_pic.data:
-            picture_file = save_picture(form.profile_pic.data,'profile_pics')
-            SQL_query.update_profile(mysql,form.profile_pic.name,picture_file,current_user)
+            save_picture(form.profile_pic.data,'profile_pics')
+            with open('main/static/profile_pics/profile.jpg','rb') as file:
+                New_Pic = file.read()
+            SQL_query.update_profile(mysql,"guardianProfile_Pic",New_Pic,current_user)
         if form.username.data:
-            SQL_query.update_profile(mysql,form.username.name,form.username.data,current_user)
+            SQL_query.update_profile(mysql,'guardianUsername',form.username.data,current_user)
         if form.email.data:
-            SQL_query.update_profile(mysql,form.email.name,form.email.data,current_user)            
+            SQL_query.update_profile(mysql,'guardianEmail'.email.name,form.email.data,current_user)   
+        if form.PhoneNum.data:
+            SQL_query.update_profile(mysql,'guardianPhoneNumber',form.username.data,current_user)
+        if form.LP.data:
+            SQL_query.update_profile(mysql,'guardianLP',form.LP.data,current_user)
+        if form.car.data:
+            SQL_query.update_profile(mysql,'guardianCar',form.car.data,current_user)
+        if form.driver_license_pic.data:
+            save_picture(form.driver_license_pic.data,'driver_license')
+            with open('main/static/driver_license/driver-license.jpg','rb') as file:
+                New_Pic = file.read()
+            SQL_query.update_profile(mysql,"guardianDLPicture",New_Pic,current_user)
+
+
         return redirect(url_for('profile'))
     return render_template('parent_pages/update.html',title = 'updating', form = form)
 
 
 def save_picture(form_picture,location):
-    random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
-    picture_fn = random_hex + f_ext
+    if location == 'profile_pics':
+        picture_fn = 'profile.jpg'
+    else:
+        picture_fn = 'driver-license.jpg'
     picture_path = os.path.join(app.root_path, 'static/',location,picture_fn)
     form_picture.save(picture_path)
     return picture_fn
 #END OF UPDATE THE PARENT PROFILE AND INFORMATION
 
-
-@app.route("/queue", methods=['GET','POST'])
-@app.route("/Queue", methods=['GET','POST'])
-@login_required
-def Queue():
-    form = SQL_query.SingleQuery(mysql)
-    return render_template("faculty_pages/queue.html",title='Queue',forms = form)
 
 #THE FUNCTION AND CODE FOR THE QR CODE CREATION AND REQUEST PAGE
 @app.route("/request", methods=['GET','POST'])
@@ -206,13 +232,15 @@ def submit():
     date = date_time.strftime("%Y-%m-%d")
     time = date_time.strftime("%I:%M %p")
     teacher_id = current_user.user_id
-    SQL_query.Store_Chat(mysql,teacher_id,text,date,time,type)
+    if text:
+        SQL_query.Store_Chat(mysql,teacher_id,text,date,time,type)
     return f"Hello: {text}"
 
 @app.route("/get_data",methods=['GET','POST'])
 @login_required
 def get_data():
     form = SQL_query.UpdateChat(mysql)
+    
     return jsonify(form)
 #END OF Function and Route for the Teacher Routes
 
@@ -243,9 +271,9 @@ def verify_code():
             remem = session.get('remember')
             user_type = session.get('user_type')
             if user_type:
-                user = User(user_data['idFaculty'],user_data['facultyUsername'],user_data['facultyEmail'],user_data['facultyPassword'],user_data['facultyPicture'],user_data['facultyFirstName'],user_data['facultyLastName'])
+                user = User(user_data['idFaculty'],user_data['facultyUsername'],user_data['facultyEmail'],user_data['facultyPassword'],user_data['facultyFirstName'],user_data['facultyLastName'])
             else:
-                user = User(user_data['idGuardian'],user_data['guardianUsername'],user_data['guardianEmail'],user_data['guardianPassword'],user_data['guardianProfile_Pic'],user_data['guardianFirstName'],user_data['guardianLastName'])
+                user = User(user_data['idGuardian'],user_data['guardianUsername'],user_data['guardianEmail'],user_data['guardianPassword'],user_data['guardianFirstName'],user_data['guardianLastName'])
             login_user(user, remember=remem)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
@@ -262,3 +290,20 @@ def send_email(code,email):
 # END OF FUNCTIONS AND ROUTES TO ACCOMPLISH TWO STEP VERIFICATION
 
 
+@app.route("/queue", methods=['GET','POST'])
+@app.route("/Queue", methods=['GET','POST'])
+@login_required
+def Queue():
+    return render_template("faculty_pages/queue.html",title='Queue')
+
+@app.route("/get_Greenqueue",methods=['GET','POST'])
+@login_required
+def get_Greenqueue():
+    form = SQL_query.grabQueue(mysql,'Green')
+    return jsonify(form)
+
+@app.route("/get_Yellowqueue",methods=['GET','POST'])
+@login_required
+def get_Yellowqueue():
+    form = SQL_query.grabQueue(mysql,'Yellow')
+    return jsonify(form)

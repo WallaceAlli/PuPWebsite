@@ -1,14 +1,12 @@
 from datetime import datetime
 
-
-
 class SQL_query:
     #This is the Query that will run if they selected that they are a Faculty allowing me to differntiate between
     # Parent and Teacher LogIns
     def Faculty_LogIn_query(mysql,form):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        query = "SELECT idFaculty,facultyUsername,facultyEmail,facultyPassword,facultyPicture,facultyFirstName,facultyLastName FROM `faculty` WHERE facultyUsername = (%s)" 
+        query = "SELECT idFaculty,facultyUsername,facultyEmail,facultyPassword,facultyFirstName,facultyLastName FROM `faculty` WHERE facultyUsername = (%s)" 
         mysql_cursor.execute(query,({form.username.data}))
         user_data = mysql_cursor.fetchone()
         mysql_cursor.close()
@@ -45,8 +43,6 @@ class SQL_query:
         mysqlc.close()
         return user_data
     
-
-    
     def Load_Parent_User_id(mysql,form):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
@@ -60,7 +56,7 @@ class SQL_query:
     def Parent_LogIn_query(mysql,form):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        query = "SELECT idGuardian,guardianUsername,guardianEmail,guardianPassword, guardianProfile_Pic,guardianPhoneNumber,guardianFirstName,guardianLastName,guardianLP,guardianDLNumber,guardianDLPicture FROM `guardians` WHERE guardianUsername = (%s)" 
+        query = "SELECT idGuardian,guardianUsername,guardianEmail,guardianPassword,guardianFirstName,guardianLastName FROM `guardians` WHERE guardianUsername = (%s)" 
         mysql_cursor.execute(query,({form.username.data}))
         user_data = mysql_cursor.fetchone()
         mysql_cursor.close()
@@ -93,26 +89,17 @@ class SQL_query:
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
         query = "UPDATE `guardians` SET {} = (%s) WHERE `idGuardian` =  (%s)".format(col_name)
-        mysql_cursor.execute(query,({form},User.user_id))
+        mysql_cursor.execute(query,(form,User.user_id))
         # Do this when the things im using to query need to be different types
         # Picture file is a string and user_id is an int
         mysqlc.commit()
         mysql_cursor.close()
         mysqlc.close()
-
-    def SingleQuery(mysql):
-        mysqlc = mysql.connect
-        mysql_cursor = mysqlc.cursor()
-        mysql_cursor.execute("SELECT * FROM guardians")
-        fetchdata = mysql_cursor.fetchall()
-        mysql_cursor.close()
-        mysqlc.close()
-        return fetchdata
     
     def UpdateChat(mysql):
         mysqlc = mysql.connect
         mysql_cursor = mysqlc.cursor()
-        mysql_cursor.execute("select facultyUsername,facultyPicture,messageContent,messagelogTime,messagelogDate,messagelogType from messagelog, faculty where idUser1 = idFaculty")
+        mysql_cursor.execute("select facultyUsername,messageContent,messagelogTime,messagelogDate,messagelogType from messagelog, faculty where idUser1 = idFaculty")
         fetchdata = mysql_cursor.fetchall()
         mysql_cursor.close()
         mysqlc.close()
@@ -126,6 +113,113 @@ class SQL_query:
         mysqlc.commit()
         mysql_cursor.close()
         mysqlc.close()
+
+    def InsertStudent(mysql,firstname,lastname,grade,address):
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        query = "INSERT INTO `students` (`studentFirstName`, `studentLastName`, `studentGrade`,`studentAddress`) VALUES (%s, %s, %s,%s)"
+        mysql_cursor.execute(query,({firstname},{lastname},grade,{address}))
+        mysqlc.commit()
+        mysql_cursor.close()
+
+    def StudentView(mysql,student):
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        query = "select idStudent from students where studentFirstName = (%s)"
+        mysql_cursor.execute(query,({student}))
+        fetchdata = mysql_cursor.fetchone()
+        mysql_cursor.close()
+        return fetchdata
+    
+    def InsertView(mysql,parentId,studentId):
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        query = "INSERT INTO  `guardian_student` (idGuardian,idStudent) Values(%s,%s)"
+        mysql_cursor.execute(query,(parentId,studentId))
+        mysqlc.commit()
+        mysql_cursor.close()
+        mysqlc.close()
+
+    def PrintStudent(mysql,parentId):
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        query = "select idStudent,studentFirstName,studentLastName,studentGrade from Parent_Students_View where idGuardian = (%s)"
+        mysql_cursor.execute(query,({parentId}))
+        fetchdata = mysql_cursor.fetchall()
+        mysql_cursor.close()
+        mysqlc.close()
+        return fetchdata
+    
+    def check_studentN(mysql,student):
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        query = "select studentFirstName from students where studentFirstName = (%s)"
+        mysql_cursor.execute(query,({student.data}))
+        fetchdata = mysql_cursor.fetchall()
+        mysql_cursor.close()
+        mysqlc.close()
+        return fetchdata
+    
+    def grabstudentinfo(mysql,studentid):
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        query = "select * from students where idStudent = (%s)"
+        mysql_cursor.execute(query,({studentid}))
+        fetchdata = mysql_cursor.fetchone()
+        mysql_cursor.close()
+        mysqlc.close()
+        return fetchdata
+    
+    def related(mysql,studentid):
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        query = "select guardianFirstName,guardianLastname,guardianPhoneNumber from Parent_Students_View where idStudent = (%s)"
+        mysql_cursor.execute(query,({studentid}))
+        fetchdata = mysql_cursor.fetchone()
+        mysql_cursor.close()
+        mysqlc.close()
+        return fetchdata
+    def pickuplist(mysql,studentid,form):
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        query = "INSERT INTO  `pickup_list` (idStudent,FirstName,Lastname,Type) Values(%s,%s,%s,%s)"
+        mysql_cursor.execute(query,(studentid,{form.FirstName.data},{form.LastName.data},{form.Type.data}))
+        mysqlc.commit()
+        mysql_cursor.close()
+        mysqlc.close()
+
+    def grabList(mysql,studentid):
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        query = "select FirstName,LastName from pickup_list where idStudent = (%s) and `type` = 'White'"
+        mysql_cursor.execute(query,({studentid}))
+        fetchwhite = mysql_cursor.fetchall()
+        query = "select FirstName,LastName from pickup_list where idStudent = (%s) and `type` = 'Black' "
+        mysql_cursor.execute(query,({studentid}))
+        fetchblack = mysql_cursor.fetchall()
+        mysql_cursor.close()
+        mysqlc.close()
+        return fetchwhite,fetchblack
+    
+    def grabQueue(mysql,Type):
+        mysqlc = mysql.connect
+        mysql_cursor = mysqlc.cursor()
+        query = "select * from queue where `type` = (%s)"
+        mysql_cursor.execute(query,({Type}))
+        fetchdata = mysql_cursor.fetchall()
+        mysql_cursor.close()
+        return fetchdata
+    
+
+
+
+
+
+
+
+
+        
+
 
 
     

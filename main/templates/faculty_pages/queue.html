@@ -1,23 +1,121 @@
 {% extends "layout.html" %}
 {% block content %}
-{% if forms %}
-    <div class="content-section">
-        <p> Queue</p>
-        {% for form in forms %}
-            <div class="content-section">
-                <div class="media">
-                    <img class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + form.profile_pic) }}">
-                    <h2 class="account-heading">{{ form.username }}</h2>
-                    <p class="text-secondary">{{ form.email }}</p>
+<Body style="width: 100vw; height: 70vh;">
+    <div class="content-section" style="width: 100%;">
+        <legend class ="border-bottom mb-1" style="text-align: center;">
+            Queue
+          </legend>
+
+        <div class="row">
+            
+            <div class="col">
+                <div>
+                    <legend class ="border-bottom mb-1">
+                        Green Line
+                    </legend>
+                </div>
+                <div class="scrollable-text" id="Green-Queue" >
                     
                 </div>
-                <p> Update </p>
             </div>
-        {% endfor %}
+            <div class="col">
+                <div>
+                    <legend class ="border-bottom mb-1">
+                        Yellow Line
+                    </legend>
+                </div>
+                <div class="scrollable-text" id="Yellow-Queue">
+
+                </div>
+            </div>
+
+        </div>
     </div>
-{% else %}
-    <p> No Hey </p>
-{% endif %}
+
+</Body>
+<script>
+    function LoadYellowQ(){
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("GET","/get_Yellowqueue",true);
+        xhttp.onreadystatechange =  function (){
+            if (xhttp.readyState == 4 && xhttp.status == 200){
+                var responseData = JSON.parse(xhttp.responseText);
+                var dataContainer = document.getElementById('Yellow-Queue');
+                dataContainer.innerHTML = '';
+
+                responseData.forEach(function(item){
+                    var itemDiv = document.createElement('div'); // Contains the Main Div
+                    itemDiv.classList.add('content-section');
+
+                    var UserElement = document.createElement('p');
+                    var parentElement = document.createElement('p');
+                    var CarElement = document.createElement('p');
+
+                    UserElement.textContent = "Student Name: "+ item.studentFirst + " "+ item.studentLast
+                    parentElement.textContent = "Parent Name: "+ item.parentFirst+" "+ item.parentLast
+                    CarElement.textContent = "Car Model: "+item.parentCar;
+
+                    itemDiv.appendChild(UserElement);
+                    itemDiv.appendChild(parentElement);
+                    itemDiv.appendChild(CarElement);
+                    dataContainer.appendChild(itemDiv);
+                });
+            }
+        };
+        xhttp.send()
+
+        ;
+    }
+    function LoadGreenQ(){
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("GET","/get_Greenqueue",true);
+        xhttp.onreadystatechange =  function (){
+            if (xhttp.readyState == 4 && xhttp.status == 200){
+                var responseData = JSON.parse(xhttp.responseText);
+                var dataContainer = document.getElementById('Green-Queue');
+                dataContainer.innerHTML = '';
+
+                responseData.forEach(function(item){
+                    var itemDiv = document.createElement('div'); // Contains the Main Div
+                    itemDiv.classList.add('content-section');
+
+                    var UserElement = document.createElement('p');
+                    var parentElement = document.createElement('p');
+                    var CarElement = document.createElement('p');
+
+                    UserElement.textContent = "Student Name: "+ item.studentFirst + " "+ item.studentLast
+                    parentElement.textContent = "Parent Name: "+ item.parentFirst+" "+ item.parentLast
+                    CarElement.textContent = "Car Model: "+item.parentCar;
+
+                    itemDiv.appendChild(UserElement);
+                    itemDiv.appendChild(parentElement);
+                    itemDiv.appendChild(CarElement);
+                    dataContainer.appendChild(itemDiv);
+                });
+            }
+        };
+        xhttp.send()
+
+        ;
+        }
 
 
+    LoadYellowQ();
+    setInterval(LoadYellowQ, 2000);
+    setInterval(LoadGreenQ, 2000);
+    LoadGreenQ();
+</script>
+
+<style>
+.scrollable-text {
+  
+  overflow-y: scroll;
+  margin: auto;
+  max-height: 60vh;
+  height: 60vh;
+  border: 1px solid #000;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+</style>
 {% endblock content %}

@@ -20,22 +20,26 @@
             <legend class ="border-bottom mb-1">
               Student Name
             </legend>
-            <p></p>
-
-            <legend class ="border-bottom mb-1">
-              Student Grade
-            </legend>
-            <p></p>
+            <p>{{form.studentFirstName}} {{form.studentLastName}}</p>
 
             <legend class ="border-bottom mb-1">
               Associated Guardian
             </legend>
-            <p> </p>
+            <p>{{current_user.firstN}} {{current_user.LastN}}</p>
 
             <legend class ="border-bottom mb-1">
-              Student Address
+              Student Primary Address
             </legend>
-            <p> </p>
+            <p> {{form.studentAddress}}</p>
+
+            <legend class ="border-bottom mb-1">
+              Student Grade
+            </legend>
+            <p>{{form.studentGrade}}</p>
+            <a class="nav-item nav-link" onclick="redirectToStudent('{{form.idStudent}}')" style="color: black;border: 1px solid #000;">Update White/Black List</a>
+
+
+            
                         
               
           </div>
@@ -44,9 +48,9 @@
             <legend class ="border-bottom mb-1">
               White List Pick Up
             </legend>
-            {% for parent in parents %}
-              <div class="content-section" id="{{ parent }}">
-                parent
+            {% for Adult in white %}
+              <div  id="{{ parent }}">
+                <p>{{ Adult.FirstName}} {{ Adult.LastName}}</p>
               </div>
             {% endfor %}
 
@@ -65,16 +69,17 @@
             <legend class ="border-bottom mb-1">
               Black List Pick Up
             </legend>
-            <div class="content-section" style="height: 50%;">
-
-            </div>
+            {% for Adult in black %}
+              <div  id="{{ parent }}">
+                <p>{{ Adult.FirstName}} {{ Adult.LastName}}</p>
+              </div>
+            {% endfor %}
 
               
               
 
 
-            <a class="nav-item nav-link" href="{{ url_for('update') }}" style="color: black;border: 1px solid #000;">Update Parent Info</a>
-
+=
           </div>
           
       </div>
@@ -84,6 +89,14 @@
         
   </div>
 
+  <script>
+    function redirectToStudent(studentId) {
+      var url = "{{ url_for('AddList', student_id='STUDENT_ID') }}".replace('STUDENT_ID', studentId);
+      window.location.href = url;
+  }
+  
+  
+  </script>
 
 
 {% endblock content %}
